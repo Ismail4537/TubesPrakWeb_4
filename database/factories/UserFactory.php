@@ -22,6 +22,7 @@ class UserFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'birthdate' => $this->faker->date(),
             'password' => bcrypt('password'), // Default password
+            'profile_photo_path' => null,
         ];
     }
 }
