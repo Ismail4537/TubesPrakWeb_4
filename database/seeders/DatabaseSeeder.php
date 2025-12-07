@@ -15,11 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        for ($i = 0; $i < 10; $i++) {
+            User::create([
+                'name' => 'User ' . ($i + 1),
+                'email' => 'user' . ($i + 1) . '@example.com',
+                'phone' => '123-456-7890',
+                'birthdate' => '1990-01-01',
+                'password' => bcrypt('password'),
+            ]);
+        }
     }
 }
