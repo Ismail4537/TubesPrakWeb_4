@@ -21,6 +21,7 @@ return new class extends Migration
             $table->dateTime('start_date_time');
             $table->dateTime('end_date_time');
             $table->string('location');
+            $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
             $table->timestamps();
         });
     }

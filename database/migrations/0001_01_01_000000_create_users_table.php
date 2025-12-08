@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('birthdate');
             $table->string('password');
             $table->string('profile_photo_path')->nullable();
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

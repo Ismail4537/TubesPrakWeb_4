@@ -22,7 +22,7 @@ class Event extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function scopeFilter(Builder $query, array $filters): void
@@ -50,5 +50,10 @@ class Event extends Model
                 $query->where('name', 'like', '%' . $creator . '%')
             )
         );
+    }
+
+    public function registrants()
+    {
+        return $this->hasMany(Registrant::class, 'event_id');
     }
 }

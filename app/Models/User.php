@@ -51,6 +51,11 @@ class User extends Authenticatable
 
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Event::class, 'user_id');
+    }
+
+    public function registrants(): HasMany
+    {
+        return $this->hasMany(Registrant::class, 'user_id');
     }
 }
