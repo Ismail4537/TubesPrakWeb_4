@@ -19,7 +19,7 @@ class EventFactory extends Factory
     {
         $title = $this->faker->sentence(4);
         return [
-            'user_id' => \App\Models\User::factory(),
+            'creator_id' => \App\Models\User::factory(),
             'category_id' => \App\Models\Category::factory(),
             'title' => $title,
             'slug' => Str::slug($title),
@@ -27,6 +27,7 @@ class EventFactory extends Factory
             'start_date_time' => $this->faker->dateTimeBetween('+1 days', '+1 month'),
             'end_date_time' => $this->faker->dateTimeBetween('+1 month', '+2 months'),
             'location' => $this->faker->address(),
+            'status' => $this->faker->randomElement(['scheduled', 'ongoing', 'completed', 'cancelled']),
         ];
     }
 }
