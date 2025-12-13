@@ -29,6 +29,16 @@
                 <input type="email" name="email" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500" placeholder="nama@email.com">
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                <input type="password" name="password" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
+                <input type="password" name="password_confirmation" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
+            </div>
+
             </form>
         </div>
 
