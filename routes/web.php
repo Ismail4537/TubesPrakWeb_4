@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 
 Route::get('/', function () {
-    return view('front-page.home', ["title" => "Home"]);
+    return view('dashboard.categories', ["title" => "Home"]);
 });
 
 // Rute untuk Index (event.index)
