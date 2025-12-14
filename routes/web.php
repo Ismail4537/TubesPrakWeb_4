@@ -7,6 +7,9 @@ Route::get('/', function () {
     return view('front-page.home', ["title" => "Home"]);
 });
 
+Route::get('/about', function () {
+    return view('front-page.about', ["title" => "About"]);
+})->name('about');
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
@@ -25,6 +28,3 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('register');
 })->name('register');
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
