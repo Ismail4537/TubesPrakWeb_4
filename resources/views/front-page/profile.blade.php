@@ -1,25 +1,15 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil User</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+<x-front-page.layout>
+<x-slot:title> {{$title}} </x-slot:title>
 
     <div class="max-w-7xl mx-auto">
-        
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            
             <div class="md:col-span-1 space-y-6">
-                
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
                     <div class="relative mx-auto w-32 h-32 mb-4">
                         <img src="https://ui-avatars.com/api/?name=Ismail+457&background=4f46e5&color=fff&size=128" 
                             class="rounded-full w-full h-full object-cover border-4 border-white shadow-lg shadow-indigo-100" alt="Profile">
                     </div>
-                    
+
                     <h2 class="text-xl font-bold text-slate-800">deka</h2>
                     <p class="text-slate-500 text-sm mb-4">Member sejak 2024</p>
                     
@@ -53,7 +43,6 @@
                                 USER
                             </span>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -193,7 +182,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-</body>
-</html>
+</x-front-page.layout>

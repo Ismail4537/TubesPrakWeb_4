@@ -5,9 +5,7 @@
 
 <body>
 
-
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-
         <!-- Search, Create, Filter -->
         <div class="p-4 flex items-center justify-between">
 
@@ -63,11 +61,6 @@
                 <tr>
                     <th class="px-6 py-3 font-medium text-center">No</th>
                     <th class="px-6 py-3 font-medium">Nama</th>
-                    <th class="px-6 py-3 font-medium">Email</th>
-                    <th class="px-6 py-3 font-medium">Nomor Telepon</th>
-                    <th class="px-6 py-3 font-medium">Tanggal Lahir</th>
-                    <th class="px-6 py-3 font-medium">Profile Photo</th>
-                    <th class="px-6 py-3 font-medium">Role</th>
 
                     <!-- 🔥 Tambahan kolom AKSI -->
                     <th class="px-6 py-3 font-medium text-center">Aksi</th>
@@ -78,12 +71,7 @@
 
                 <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="px-6 py-4 text-center">1</td>
-                    <td class="px-6 py-4">Raisa Andini</td>
-                    <td class="px-6 py-4">raisa@gmail.com</td>
-                    <td class="px-6 py-4">08123456789</td>
-                    <td class="px-6 py-4">12/03/2000</td>
-                    <td class="px-6 py-4">foto1.jpg</td>
-                    <td class="px-6 py-4">Admin</td>
+                    <td class="px-6 py-4">Teknologi</td>
 
                     <!-- Aksi -->
                     <td class="px-6 py-4 text-center">
@@ -94,12 +82,7 @@
 
                 <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="px-6 py-4 text-center">2</td>
-                    <td class="px-6 py-4">Budi Santoso</td>
-                    <td class="px-6 py-4">budi@gmail.com</td>
-                    <td class="px-6 py-4">08198765432</td>
-                    <td class="px-6 py-4">05/09/1999</td>
-                    <td class="px-6 py-4">foto2.jpg</td>
-                    <td class="px-6 py-4">User</td>
+                    <td class="px-6 py-4">Politik</td>
 
                     <!-- Aksi -->
                     <td class="px-6 py-4 text-center">
@@ -110,12 +93,7 @@
 
                 <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
                     <td class="px-6 py-4 text-center">3</td>
-                    <td class="px-6 py-4">Siti Marlina</td>
-                    <td class="px-6 py-4">siti@gmail.com</td>
-                    <td class="px-6 py-4">08222333444</td>
-                    <td class="px-6 py-4">22/01/2002</td>
-                    <td class="px-6 py-4">foto3.jpg</td>
-                    <td class="px-6 py-4">Moderator</td>
+                    <td class="px-6 py-4">Olahraga</td>
 
                     <!-- Aksi -->
                     <td class="px-6 py-4 text-center">
@@ -123,7 +101,6 @@
                         <button class="text-red-600 font-medium hover:underline">Delete</button>
                     </td>
                 </tr>
-
             </tbody>
         </table>
 
@@ -133,10 +110,6 @@
             <button class="border px-3 py-1 rounded bg-neutral-secondary-medium">1</button>
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">2</button>
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
-
         </div>
-
     </div>
-
-
 </body>
