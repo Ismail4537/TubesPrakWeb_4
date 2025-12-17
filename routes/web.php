@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('front-page.home', ["title" => "Home"]);
@@ -36,9 +37,11 @@ Route::get('/dashboard/users', function () {
     return view('dashboard.users');
 });
 
+
 Route::post('/dashboard/users', function () {
-    return redirect('/dashboard/users')->with('success', 'Data berhasil disimpan!');
-});
+    // Logika simpan dummygit
+    return redirect()->back()->with('success', 'Data berhasil disimpan!');
+})->name('users.store');
 
 
 Route::get('/login', function () {

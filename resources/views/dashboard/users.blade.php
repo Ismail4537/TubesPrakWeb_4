@@ -27,9 +27,10 @@
                 </div>
 
                 <!-- Create Button -->
-                <label for="modal-user" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 text-sm cursor-pointer transition">
+                <button onclick="openModal('modal-create')" 
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 text-sm cursor-pointer transition">
                     + Tambah User
-                </label>
+                </button>
 
             </div>
 
@@ -141,16 +142,16 @@
 
     <input type="checkbox" id="modal-user" class="peer hidden">
 
-<div class="fixed inset-0 z-50 hidden peer-checked:flex justify-center items-center w-full h-full bg-slate-900/50 backdrop-blur-sm transition-all">
+<div id="modal-create" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-slate-900/50 backdrop-blur-sm transition-all">
     
     <div class="relative w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 mx-4 border border-slate-200">
         
         <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
             <h3 class="text-xl font-bold text-slate-800">Tambah User Baru</h3>
-            <label for="modal-user" class="cursor-pointer text-slate-400 hover:text-red-500 font-bold text-2xl transition">&times;</label>
+            <button type="button" onclick="closeModal('modal-create')" class="text-slate-400 hover:text-red-500 font-bold text-2xl transition">&times;</button>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="space-y-4">
                 <div>
@@ -190,10 +191,39 @@
             </div>
 
             <div class="mt-8 flex justify-end gap-3 border-t border-slate-100 pt-4">
-                <label for="modal-user" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer font-medium transition">Batal</label>
+                <button type="button" onclick="closeModal('modal-create')" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer font-medium transition">Batal</button>
                 <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium shadow-md transition">Simpan Data</button>
             </div>
         </form>
     </div>
 </div>
+
+
+// JS tambah user 
+<script>
+    // Fungsi buat BUKA modal berdasarkan ID
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('hidden'); 
+        modal.classList.add('flex');      
+    }
+
+    // Fungsi buat TUTUP modal
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.add('hidden');    
+        modal.classList.remove('flex');
+    }
+
+    // (Opsional) Tutup modal kalau klik background gelap
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal-create');
+        if (event.target == modal) {
+            closeModal('modal-create');
+        }
+    }
+</script>
+//akhir JS tambah user
+
+
 </body>
