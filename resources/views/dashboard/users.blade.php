@@ -92,7 +92,16 @@
 
                     <!-- Aksi -->
                     <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
+                        <button type="button" onclick="openEditModal(this)" 
+                            data-id="1" 
+                            data-name="Raisa Andini"        
+                            data-email="raisa@gmail.com"    
+                            data-phone="08123456789"       
+                            data-dob="2000-03-12"
+                            data-role="Admin"
+                            class="text-brand font-medium hover:underline mr-4">
+                            Update
+                        </button>
                         <button class="text-red-600 font-medium hover:underline">Delete</button>
                     </td>
                 </tr>
@@ -140,6 +149,11 @@
         </div>
     </div>
 
+
+
+
+
+    
     <input type="checkbox" id="modal-user" class="peer hidden">
 
 <div id="modal-create" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-slate-900/50 backdrop-blur-sm transition-all">
@@ -199,7 +213,73 @@
 </div>
 
 
-// JS tambah user 
+
+
+
+
+
+<div id="modal-edit" class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-slate-900/50 backdrop-blur-sm transition-all">
+    <div class="relative w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 mx-4 border border-slate-200">
+        
+        <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+            <h3 class="text-xl font-bold text-slate-800">Edit User</h3>
+            <button type="button" onclick="closeModal('modal-edit')" class="text-slate-400 hover:text-red-500 font-bold text-2xl transition">&times;</button>
+        </div>
+
+        <form action="{{ route('users.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT') 
+
+            <input type="hidden" name="id" id="edit-id">
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                    <input type="text" name="name" id="edit-name" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" name="email" id="edit-email" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
+                        <input type="text" name="phone" id="edit-phone" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                    <select name="role" id="edit-role" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none bg-white text-slate-800">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ganti Foto (Opsional)</label>
+                    <input type="file" name="photo" class="w-full text-sm text-slate-500 
+                    file:mr-4 file:py-2 file:px-4 
+                    file:rounded-full file:border-0 
+                    file:text-sm file:font-semibold 
+                    file:bg-indigo-50 file:text-indigo-700 
+                    hover:file:bg-indigo-100 transition">
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-3 border-t border-slate-100 pt-4">
+                <button type="button" onclick="closeModal('modal-edit')" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-medium">Batal</button>
+                <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium shadow-md">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+ 
+
+
 <script>
     // Fungsi buat BUKA modal berdasarkan ID
     function openModal(modalId) {
@@ -223,7 +303,43 @@
         }
     }
 </script>
-//akhir JS tambah user
+
+
+
+
+
+<script>
+    // --- FUNGSI CREATE (YANG UDAH ADA) ---
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+        document.getElementById(modalId).classList.add('flex');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        document.getElementById(modalId).classList.remove('flex');
+    }
+
+    // --- FUNGSI BARU BUAT EDIT ---
+    function openEditModal(button) {
+        // 1. Ambil data dari tombol
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const email = button.getAttribute('data-email');
+        const phone = button.getAttribute('data-phone');
+        const role = button.getAttribute('data-role');
+
+        // 2. Isi kolom-kolom di Modal Edit
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-email').value = email;
+        document.getElementById('edit-phone').value = phone;
+        document.getElementById('edit-role').value = role;
+
+        // 3. Buka Modalnya
+        openModal('modal-edit');
+    }
+</script>
 
 
 </body>

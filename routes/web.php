@@ -43,6 +43,10 @@ Route::post('/dashboard/users', function () {
     return redirect()->back()->with('success', 'Data berhasil disimpan!');
 })->name('users.store');
 
+Route::put('/dashboard/users/update', function () {
+    return redirect()->back()->with('success', 'Data berhasil diupdate (Dummy)!');
+})->name('users.update');
+
 
 Route::get('/login', function () {
     return view('login');
