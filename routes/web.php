@@ -36,6 +36,10 @@ Route::get('/dashboard/users', function () {
     return view('dashboard.users');
 });
 
+Route::post('/dashboard/users', function () {
+    return redirect('/dashboard/users')->with('success', 'Data berhasil disimpan!');
+});
+
 
 Route::get('/login', function () {
     return view('login');

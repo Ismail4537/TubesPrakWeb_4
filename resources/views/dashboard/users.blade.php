@@ -27,9 +27,9 @@
                 </div>
 
                 <!-- Create Button -->
-                <button class="px-4 py-2 bg-brand text-white rounded-base shadow hover:bg-brand-dark text-sm">
-                    Create
-                </button>
+                <label for="modal-user" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 text-sm cursor-pointer transition">
+                    + Tambah User
+                </label>
 
             </div>
 
@@ -54,6 +54,12 @@
                 </ul>
             </div>
         </div>
+
+        @if(session('success'))
+        <div class="mb-4 p-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200" role="alert">
+            <span class="font-bold">Berhasil!</span> {{ session('success') }}
+        </div>
+        @endif
 
         <!-- TABLE -->
         <table class="w-full text-sm text-left text-body">
@@ -132,4 +138,62 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
+
+    <input type="checkbox" id="modal-user" class="peer hidden">
+
+<div class="fixed inset-0 z-50 hidden peer-checked:flex justify-center items-center w-full h-full bg-slate-900/50 backdrop-blur-sm transition-all">
+    
+    <div class="relative w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 mx-4 border border-slate-200">
+        
+        <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+            <h3 class="text-xl font-bold text-slate-800">Tambah User Baru</h3>
+            <label for="modal-user" class="cursor-pointer text-slate-400 hover:text-red-500 font-bold text-2xl transition">&times;</label>
+        </div>
+
+        <form action="#" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                    <input type="text" name="name" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" placeholder="Masukan nama...">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" name="email" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800" placeholder="email@contoh.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
+                        <input type="text" name="phone" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800" placeholder="0812...">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Lahir</label>
+                        <input type="date" name="dob" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                        <select name="role" class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none bg-white text-slate-800">
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Foto Profil</label>
+                    <input type="file" name="photo" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-3 border-t border-slate-100 pt-4">
+                <label for="modal-user" class="px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer font-medium transition">Batal</label>
+                <button type="submit" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium shadow-md transition">Simpan Data</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
