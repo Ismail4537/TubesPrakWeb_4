@@ -16,11 +16,6 @@
                     </div>
 
                     <h2 class="text-xl font-bold text-slate-800">{{$user->name}}</h2>
-                    <br>
-
-                    <a href="/profile/edit" class="block w-full py-2 px-4 bg-white border border-indigo-200 text-indigo-600 rounded-lg text-sm font-medium hover:bg-indigo-50 hover:border-indigo-300 transition">
-                        Edit profile
-                    </a>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -63,22 +58,10 @@
             </div>
 
             <div class="md:col-span-3">
+                
                 <div class="flex border-b border-slate-200 mb-6 bg-white rounded-t-xl overflow-hidden shadow-sm">
                     <a href={{ route('profile') }} class=
-                    @if (Request::url() == route('profile'))
                         "flex-1 px-6 py-4 text-center text-indigo-600 border-b-2 border-indigo-600 font-bold bg-indigo-50/50"
-                    @else
-                        "flex-1 px-6 py-4 text-center text-slate-500 hover:text-slate-700 hover:bg-slate-50 font-medium transition"
-                    @endif
-                    >
-                        Event yang didaftarkan
-                    </a>
-                    <a href={{ route('profile.creator') }} class=
-                    @if (Request::url() == route('profile.creator'))
-                        "flex-1 px-6 py-4 text-center text-indigo-600 border-b-2 border-indigo-600 font-bold bg-indigo-50/50"
-                    @else
-                        "flex-1 px-6 py-4 text-center text-slate-500 hover:text-slate-700 hover:bg-slate-50 font-medium transition"
-                    @endif
                     >
                         Event yang dibuat
                     </a>
@@ -87,13 +70,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @if ($listEvent->isEmpty())
                         <div class="col-span-3 text-center py-10">
-                            <p class="text-slate-500">
-                                @if (Request::url() == route('profile.creator'))
-                                    Anda belum membuat event apapun.
-                                @else
-                                    Anda belum mendaftar pada event apapun.
-                                @endif
-                            </p>
+                            <p class="text-slate-500">User ini belum membuat event apapun.</p>
                         </div>
                     @endif
                     @foreach ($listEvent as $event)
@@ -126,3 +103,4 @@
         </div>
     </div>
 </x-front-page.layout>
+<script src="BASEURL"></script>

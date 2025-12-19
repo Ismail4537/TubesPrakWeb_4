@@ -10,6 +10,13 @@ class ProfileController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        return view('front-page.profile', compact('user'), ['title' => 'User Profile']);
+        $listEvent = $user->events()->where('user_id', $user->id)->get();
+        return view('front-page.profile', compact('user', 'listEvent'), ['title' => 'User Profile']);
+    }
+
+    public function creator(){
+        $user = Auth::user();
+        $listEvent = $user->events()->where('creator_id', $user->id)->get();
+        return view('front-page.profile', compact('user', 'listEvent'), ['title' => 'User Profile']);
     }
 }
