@@ -40,7 +40,9 @@
                 {{ $event['title'] }}
             </h1>
             <p class="text-lg text-gray-600 mb-6">
-                By {{ $event->creator->name }}
+                <a href="{{ route('contac.show', ['id' => $event->creator->id]) }}">
+                    By {{ $event->creator->name }}
+                </a>
             </p>
             <div class="space-y-4 mb-8">
                 <div class="flex items-start">
@@ -61,7 +63,6 @@
                 <p>
                     {{ $event['description'] }}
                 </p>
-                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">Baca Lebih Banyak</a>
             </div>
             <div class="mt-6">
                 <span class="inline-block bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">{{ $event->category->name }}</span>

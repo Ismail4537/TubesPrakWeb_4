@@ -12,7 +12,7 @@
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
             <x-front-page.nav-link href="/about" :active="request()->is('about')">About</x-front-page.nav-link>
             <x-front-page.nav-link href="/event" :active="request()->is('event')">Event</x-front-page.nav-link>
-            <x-front-page.nav-link href="/contact" :active="request()->is('contact')">Contacts</x-front-page.nav-link>
+            <x-front-page.nav-link href="/contac" :active="request()->is('contac')">Contacts</x-front-page.nav-link>
           </div>
         </div>
       </div>
@@ -24,9 +24,6 @@
           <x-front-page.nav-link href="/login" :active="request()->is('login')">Sign In</x-front-page.nav-link>
           <x-front-page.nav-link href="/register" :active="request()->is('register')">Sign Up</x-front-page.nav-link>
           @else
-          {{-- Logged in user info --}}
-          <a href="/ptofile" class="text-gray-300 text-sm">Halo, {{ Auth::user()->name }}</a>
-          
           {{-- Logout button --}}
           <form action="{{ route('logout') }}" method="POST" class="inline">
             @csrf
@@ -34,6 +31,16 @@
               Logout
             </button>
           </form>
+          {{-- Logged in user info --}}
+          <a href={{ route('profile') }} class="text-gray-300 text-sm">
+            <img src=
+                        @if ( Auth::user()->profile_photo_path != null)
+                            {{ Auth::user()->profile_photo_path }}
+                        @else
+                            {{ asset('Image/Preview.jpg') }}
+                        @endif
+                            class="rounded-full w-10 h-10 object-cover border-4 border-white" alt="Profile">
+          </a>
           @endguest
         </div>
       </div>
