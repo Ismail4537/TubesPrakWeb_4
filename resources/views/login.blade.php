@@ -16,9 +16,26 @@
 
         <form action="/login" method="POST" class="px-8 pb-8 space-y-5">
             @csrf
+            
+            @if (session('success'))
+                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                    <p class="text-sm font-medium">{{ session('success') }}</p>
+                </div>
+            @endif
+            
+            @if ($errors->any())
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                    <ul class="list-disc list-inside text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-                <input type="email" name="email" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500">
+                <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             </div>
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
