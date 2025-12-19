@@ -67,7 +67,7 @@
                     <th class="px-6 py-3 font-medium">Jadwal</th>
                     <th class="px-6 py-3 font-medium">Status</th>
 
-                    <!-- 🔥 Tambahan kolom AKSI -->
+                    <!-- Tambahan kolom AKSI -->
                     <th class="px-6 py-3 font-medium text-center">Aksi</th>
                 </tr>
             </thead>

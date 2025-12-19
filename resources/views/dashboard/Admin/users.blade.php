@@ -74,53 +74,34 @@
 
             <tbody>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">1</td>
-                    <td class="px-6 py-4">Raisa Andini</td>
-                    <td class="px-6 py-4">raisa@gmail.com</td>
-                    <td class="px-6 py-4">08123456789</td>
-                    <td class="px-6 py-4">12/03/2000</td>
-                    <td class="px-6 py-4">foto1.jpg</td>
-                    <td class="px-6 py-4">Admin</td>
+                @forelse($users ?? [] as $index => $user)
+                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
+                        <td class="px-6 py-4">{{ $user->name }}</td>
+                        <td class="px-6 py-4">{{ $user->email }}</td>
+                        <td class="px-6 py-4">{{ $user->phone ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $user->profile_photo_path ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $user->role ?? 'User' }}</td>
 
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                        <!-- Aksi -->
+                        <td class="px-6 py-4 text-center">
+                            <a href="{{ route('dashboard.users.edit', $user->id) }}"
+                                class="text-brand font-medium hover:underline mr-4">Update</a>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">2</td>
-                    <td class="px-6 py-4">Budi Santoso</td>
-                    <td class="px-6 py-4">budi@gmail.com</td>
-                    <td class="px-6 py-4">08198765432</td>
-                    <td class="px-6 py-4">05/09/1999</td>
-                    <td class="px-6 py-4">foto2.jpg</td>
-                    <td class="px-6 py-4">User</td>
-
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
-
-                <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">3</td>
-                    <td class="px-6 py-4">Siti Marlina</td>
-                    <td class="px-6 py-4">siti@gmail.com</td>
-                    <td class="px-6 py-4">08222333444</td>
-                    <td class="px-6 py-4">22/01/2002</td>
-                    <td class="px-6 py-4">foto3.jpg</td>
-                    <td class="px-6 py-4">Moderator</td>
-
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                            <form action="{{ route('dashboard.users.destroy', $user->id) }}" method="POST"
+                                class="inline" onsubmit="return confirm('Yakin hapus?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 font-medium hover:underline">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="px-6 py-4 text-center">Tidak ada data pengguna.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
 

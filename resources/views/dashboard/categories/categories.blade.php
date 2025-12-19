@@ -27,9 +27,12 @@
                 </div>
 
                 <!-- Create Button -->
-                <button class="px-4 py-2 bg-brand text-white rounded-base shadow hover:bg-brand-dark text-sm">
+                <button onclick="window.location='{{ route('categories.create') }}'"
+                    class="px-4 py-2 bg-brand text-black rounded-base shadow hover:bg-brand-dark text-sm">
                     Create
                 </button>
+
+
 
             </div>
 
@@ -60,56 +63,43 @@
             <thead class="bg-neutral-secondary-medium border-b border-default-medium">
                 <tr>
                     <th class="px-6 py-3 font-medium text-center">No</th>
-                    <th class="px-6 py-3 font-medium">Judul Event</th>
-                    <th class="px-6 py-3 font-medium">Kategori</th>
-                    <th class="px-6 py-3 font-medium">Jadwal</th>
-                    <th class="px-6 py-3 font-medium">Status</th>
+                    <th class="px-6 py-3 font-medium">Nama</th>
+
+                    <!-- Tambahan kolom AKSI -->
                     <th class="px-6 py-3 font-medium text-center">Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">1</td>
-                    <td class="px-6 py-4">Konferensi meja bundar</td>
-                    <td class="px-6 py-4">Politik</td>
-                    <td class="px-6 py-4">2025-12-01 09:00 / 2025-12-01 17:00</td>
-                    <td class="px-6 py-4">Ongoing</td>
+                @foreach ($categories as $index => $category)
+                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
 
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                        <td class="px-6 py-4">{{ $category->name }}</td>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">2</td>
-                    <td class="px-6 py-4">Workshop wpu</td>
-                    <td class="px-6 py-4">Teknologi</td>
-                    <td class="px-6 py-4">2025-12-02 10:00 / 2025-12-02 16:00</td>
-                    <td class="px-6 py-4">Scheduled</td>
+                        <!-- Aksi -->
+                        <td class="px-6 py-4 text-center">
+                            <a href="{{ route('categories.edit', $category->id) }}"
+                                class="text-brand font-medium hover:underline mr-4">
+                                Update
+                            </a>
 
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                class="inline">
+                                @csrf
+                                @method('DELETE')
 
-                <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">3</td>
-                    <td class="px-6 py-4">Webinar Seraton</td>
-                    <td class="px-6 py-4">Teknologi</td>
-                    <td class="px-6 py-4">2025-12-03 11:00 / 2025-12-03 15:00</td>
-                    <td class="px-6 py-4">Canceled</td>
+                                <button type="submit" class="text-red-600 font-medium hover:underline"
+                                    onclick="return confirm('Yakin hapus?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
 
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
+
                 </tr>
             </tbody>
         </table>
