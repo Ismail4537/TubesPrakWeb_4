@@ -12,7 +12,10 @@
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" -->
             <x-front-page.nav-link href="/about" :active="request()->is('about')">About</x-front-page.nav-link>
             <x-front-page.nav-link href="/event" :active="request()->is('event')">Event</x-front-page.nav-link>
-            <x-front-page.nav-link href="/contact" :active="request()->is('contact')">Contacts</x-front-page.nav-link>
+            <x-front-page.nav-link href="/contac" :active="request()->is('contac')">Contacts</x-front-page.nav-link>
+            @if (Auth::check() && Auth::user()->role === 'admin')  
+            <x-front-page.nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-front-page.nav-link>
+            @endif
           </div>
         </div>
       </div>
@@ -24,29 +27,23 @@
           <x-front-page.nav-link href="/login" :active="request()->is('login')">Sign In</x-front-page.nav-link>
           <x-front-page.nav-link href="/register" :active="request()->is('register')">Sign Up</x-front-page.nav-link>
           @else
-          <!-- Profile dropdown -->
-          <div class="relative ml-3">
-              <div>
-                <button type="button" @click="isOpen = !isOpen" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" src="{{ getAvatar(Auth()->user()->avatar) }}" alt="{{ Auth()->user()->fullname }}">
-                </button>
-              </div>
-          
-              <div  x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <!-- Active: "bg-gray-100", Not Active: "" -->
-                @if(Auth()->user()->roles == 'Admin')
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Dashboard</a>
-                @elseif(Auth()->user()->roles == 'user')
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Dashboard</a>
-                @endif
-                <form action="/logout" method="POST">
-                  @csrf
-                  <button class="block px-4 py-2 text-sm text-gray-700"> Sign Out</button>
-                </form>
-              </div>
-          </div>
+          {{-- Logout button --}}
+          <form action="{{ route('logout') }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition">
+              Logout
+            </button>
+          </form>
+          {{-- Logged in user info --}}
+          <a href={{ route('profile') }} class="text-gray-300 text-sm">
+            <img src=
+                        @if ( Auth::user()->profile_photo_path != null)
+                            {{ asset('storage/' . Auth::user()->profile_photo_path) }}
+                        @else
+                            "https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}&background=random&color=fff&size=128"
+                        @endif
+                            class="rounded-full w-10 h-10 object-cover border-4 border-white" alt="Profile">
+          </a>
           @endguest
         </div>
       </div>

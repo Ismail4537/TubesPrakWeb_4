@@ -5,7 +5,7 @@
         <div class="p-4 flex items-center justify-between">
 
             <!-- Search + Create -->
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center  text-black space-x-3">
 
                 <!-- Search bar -->
                 <div class="relative w-full max-w-sm">
@@ -22,9 +22,10 @@
                 </div>
 
                 <!-- Create Button -->
-                <button class="px-4 py-2 bg-brand text-white rounded-base shadow hover:bg-brand-dark text-sm">
+                <a href="{{ route('dashboard.events.create') }}"
+                    class="px-4 py-2 bg-brand text-black border rounded-base shadow hover:bg-brand-dark text-sm">
                     Create
-                </button>
+                </a>
 
             </div>
 
@@ -55,47 +56,43 @@
             <thead class="bg-neutral-secondary-medium border-b border-default-medium">
                 <tr>
                     <th class="px-6 py-3 font-medium text-center">No</th>
-                    <th class="px-6 py-3 font-medium">Nama</th>
-
-                    <!-- 🔥 Tambahan kolom AKSI -->
+                    <th class="px-6 py-3 font-medium">Judul Event</th>
+                    <th class="px-6 py-3 font-medium">Kategori</th>
+                    <th class="px-6 py-3 font-medium">Jadwal</th>
+                    <th class="px-6 py-3 font-medium">Status</th>
                     <th class="px-6 py-3 font-medium text-center">Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">1</td>
-                    <td class="px-6 py-4">Teknologi</td>
+                @forelse ($events ?? [] as $index => $event)
+                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
+                        <td class="px-6 py-4">{{ $event['judul'] ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $event['kategori'] ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $event['tanggal'] ?? '-' }}</td>
+                        <td class="px-6 py-4">-</td>
 
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                        <!-- Aksi -->
+                        <td class="px-6 py-4 text-center">
+                            <a href="{{ route('dashboard.events.edit', $event['id']) }}"
+                                class="text-brand font-medium hover:underline mr-4">Update</a>
 
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">2</td>
-                    <td class="px-6 py-4">Politik</td>
-
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
-
-                <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
-                    <td class="px-6 py-4 text-center">3</td>
-                    <td class="px-6 py-4">Olahraga</td>
-
-                    <!-- Aksi -->
-                    <td class="px-6 py-4 text-center">
-                        <button class="text-brand font-medium hover:underline mr-4">Update</button>
-                        <button class="text-red-600 font-medium hover:underline">Delete</button>
-                    </td>
-                </tr>
+                            <form action="{{ route('dashboard.events.destroy', $event['id']) }}" method="POST"
+                                style="display:inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 font-medium hover:underline"
+                                    onclick="return confirm('Hapus event ini?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="px-6 py-4 text-center" colspan="6">Tidak ada event.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
 

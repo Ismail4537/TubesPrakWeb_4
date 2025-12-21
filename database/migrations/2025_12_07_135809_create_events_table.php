@@ -21,6 +21,8 @@ return new class extends Migration
             $table->dateTime('start_date_time');
             $table->dateTime('end_date_time');
             $table->string('location');
+            $table->string('image_path')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
             $table->timestamps();
         });

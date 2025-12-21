@@ -24,6 +24,8 @@ class User extends Authenticatable
         'phone',
         'birthdate',
         'password',
+        'profile_photo_path',
+        'role',
     ];
 
     /**
@@ -51,7 +53,7 @@ class User extends Authenticatable
 
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'user_id');
+        return $this->hasMany(Event::class, 'creator_id');
     }
 
     public function registrants(): HasMany

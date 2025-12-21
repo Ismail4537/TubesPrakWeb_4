@@ -17,7 +17,7 @@ class Event extends Model
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function category(): BelongsTo
