@@ -19,11 +19,13 @@
 
                 {{-- Gambar --}}
                 <div class="relative h-32 sm:h-42"> 
-                    @if ($contact['image_path'] != null)
-                        <img src="{{ $contact['image_path'] }}" alt="{{ $contact['name'] }}" class="w-full h-full object-cover rounded-t-xl">
+                    <img src=
+                    @if ($contact['profile_photo_path'] != null)
+                        {{ asset('storage/' . $contact->profile_photo_path) }}
                     @else
-                        <img src="{{ asset('Image/Preview.jpg') }}" alt="{{ $contact['name'] }}" class="w-full h-full object-cover rounded-t-xl">
+                        "https://ui-avatars.com/api/?name={{ urlencode($contact->name ?? 'User') }}&background=random&color=fff&size=128"
                     @endif
+                    alt="{{ $contact['name'] }}" class="w-full h-full object-cover rounded-t-xl">
                 </div>
 
                 {{-- Deskripsi --}}

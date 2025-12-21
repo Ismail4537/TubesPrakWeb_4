@@ -20,8 +20,8 @@ Route::get('/about', function () {
 
 Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
 Route::get('/profile/creator', [ProfileController::class, 'creator'])->middleware('auth')->name('profile.creator');
-
-
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->middleware('auth')->name('profile.edit');
+Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 Route::get('/contac', [ContacController::class, 'index'])->name('contac');
 Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show');
@@ -33,30 +33,29 @@ Route::get('event/{slug}', [EventController::class, 'show'])->name('event.show')
 
 Route::get('/dashboard', function () {
     return view('dashboard.home');
-});
+})->middleware('isAdmin')->name('dashboard');
 
-Route::get('/dashboard/events', [DashboardEventController::class, 'adminIndex'])->name('dashboard.events.index');
-Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->name('dashboard.events.create');
-Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->name('dashboard.events.store');
-Route::get('/dashboard/events/{id}/edit', [DashboardEventController::class, 'edit'])->name('dashboard.events.edit');
-Route::put('/dashboard/events/{id}', [DashboardEventController::class, 'update'])->name('dashboard.events.update');
-Route::delete('/dashboard/events/{id}', [DashboardEventController::class, 'destroy'])->name('dashboard.events.destroy');
-Route::get('/dashboard/categories', [DashboardCategoryController::class, 'index'])->name('dashboard.categories');
+Route::get('/dashboard/events', [DashboardEventController::class, 'adminIndex'])->middleware('isAdmin')->name('dashboard.events.index');
+Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
+Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->middleware('isAdmin')->name('dashboard.events.store');
+Route::get('/dashboard/events/{id}/edit', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');
+Route::put('/dashboard/events/{id}', [DashboardEventController::class, 'update'])->middleware('isAdmin')->name('dashboard.events.update');
+Route::delete('/dashboard/events/{id}', [DashboardEventController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.events.destroy');
+Route::get('/dashboard/categories', [DashboardCategoryController::class, 'index'])->middleware('isAdmin')->name('dashboard.categories');
 
-Route::get('/dashboard/users', [DashboardUsersController::class, 'index'])->name('dashboard.users.index');
-Route::get('/dashboard/users/{id}/edit', [DashboardUsersController::class, 'edit'])->name('dashboard.users.edit');
-Route::put('/dashboard/users/{id}', [DashboardUsersController::class, 'update'])->name('dashboard.users.update');
-Route::delete('/dashboard/users/{id}', [DashboardUsersController::class, 'destroy'])->name('dashboard.users.destroy');
-Route::get('/dashboard/users/create', [DashboardUsersController::class, 'create'])->name('dashboard.users.create');
-Route::post('/dashboard/users', [DashboardUsersController::class, 'store'])->name('dashboard.users.store');
+Route::get('/dashboard/users', [DashboardUsersController::class, 'index'])->middleware('isAdmin')->name('dashboard.users.index');
+Route::get('/dashboard/users/{id}/edit', [DashboardUsersController::class, 'edit'])->middleware('isAdmin')->name('dashboard.users.edit');
+Route::put('/dashboard/users/{id}', [DashboardUsersController::class, 'update'])->middleware('isAdmin')->name('dashboard.users.update');
+Route::delete('/dashboard/users/{id}', [DashboardUsersController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.users.destroy');
+Route::get('/dashboard/users/create', [DashboardUsersController::class, 'create'])->middleware('isAdmin')->name('dashboard.users.create');
+Route::post('/dashboard/users', [DashboardUsersController::class, 'store'])->middleware('isAdmin')->name('dashboard.users.store');
 
-Route::get('/login', [LoginController::class, 'create'])->name('login');
-Route::post('/login', [LoginController::class, 'store']);
-Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+Route::get('/login', [LoginController::class, 'create'])->middleware('guest')->name('login');
+Route::post('/login', [LoginController::class, 'store'])->middleware('guest');
+Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store']);
-
+Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
 Route::resource('categories', DashboardCategoryController::class);
 
 

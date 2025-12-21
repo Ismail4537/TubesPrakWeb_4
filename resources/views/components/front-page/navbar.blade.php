@@ -13,6 +13,9 @@
             <x-front-page.nav-link href="/about" :active="request()->is('about')">About</x-front-page.nav-link>
             <x-front-page.nav-link href="/event" :active="request()->is('event')">Event</x-front-page.nav-link>
             <x-front-page.nav-link href="/contac" :active="request()->is('contac')">Contacts</x-front-page.nav-link>
+            @if (Auth::check() && Auth::user()->role === 'admin')  
+            <x-front-page.nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-front-page.nav-link>
+            @endif
           </div>
         </div>
       </div>
@@ -35,9 +38,9 @@
           <a href={{ route('profile') }} class="text-gray-300 text-sm">
             <img src=
                         @if ( Auth::user()->profile_photo_path != null)
-                            {{ Auth::user()->profile_photo_path }}
+                            {{ asset('storage/' . Auth::user()->profile_photo_path) }}
                         @else
-                            {{ asset('Image/Preview.jpg') }}
+                            "https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}&background=random&color=fff&size=128"
                         @endif
                             class="rounded-full w-10 h-10 object-cover border-4 border-white" alt="Profile">
           </a>

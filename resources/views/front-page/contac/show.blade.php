@@ -8,9 +8,9 @@
                     <div class="relative mx-auto w-32 h-32 mb-4">
                         <img src=
                         @if ( $user->profile_photo_path != null)
-                            {{ $user->profile_photo_path }}
+                            {{ asset('storage/' . $user->profile_photo_path) }}
                         @else
-                            {{ asset('Image/Preview.jpg') }}
+                            "https://ui-avatars.com/api/?name={{ urlencode($user->name ?? 'User') }}&background=random&color=fff&size=128"
                         @endif
                             class="rounded-full w-full h-full object-cover border-4 border-white shadow-lg shadow-indigo-100" alt="Profile">
                     </div>
