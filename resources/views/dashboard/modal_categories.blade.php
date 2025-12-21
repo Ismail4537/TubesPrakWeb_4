@@ -114,15 +114,11 @@
         </div>
     </div>
 
-    <div id="createCategoryModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    
+<div id="createCategoryModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true"> 
     <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"></div>
-
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            
             <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100">
-                
                 <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100">
                     <h3 class="text-lg font-bold text-gray-900">Tambah Kategori Baru</h3>
                     <button id="btnCloseModal" type="button" class="text-gray-400 hover:text-gray-600 transition-colors">

@@ -21,6 +21,8 @@ Route::get('/about', function () {
 Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
 Route::get('/profile/creator', [ProfileController::class, 'creator'])->middleware('auth')->name('profile.creator');
 
+
+
 Route::get('/contac', [ContacController::class, 'index'])->name('contac');
 Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show');
 
@@ -56,7 +58,6 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->name('regi
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
 Route::resource('categories', DashboardCategoryController::class);
-
 
 
 
