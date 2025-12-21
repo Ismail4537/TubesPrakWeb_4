@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100 font-sans antialiased min-h-screen flex items-center justify-center p-6">
-
+<x-front-page.layout>
+    <x-slot:title>Edit Profile</x-slot:title>
+    <div class="flex items-center justify-center min-h-[80vh] py-12">
     <div class="w-full max-w-xl">
 
         <div class="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden">
-
-            {{-- HEADER --}}
             <div class="bg-white px-8 py-6 border-b border-gray-100 text-center">
                 <h3 class="text-2xl font-extrabold text-gray-800">Edit Profile</h3>
                 <p class="text-gray-500 mt-1 text-sm">Update data diri Anda di bawah ini.</p>
@@ -24,11 +15,10 @@
 
                 <div>
 
-                    {{-- BAGIAN ATAS: FOTO PROFILE --}}
+                    
                     <div class="w-full bg-gray-50 border-b border-gray-200 p-8 flex flex-col items-center text-center justify-center">
 
                         <div class="relative mb-4 shrink-0">
-                            {{-- LOGIKA FOTO: --}}
                             @if(!empty($user->photo))
                                 <img src="{{ asset('storage/' . $user->photo) }}" class="h-40 w-40 object-cover rounded-full border-4 border-white shadow-lg bg-gray-200">
                             @else
@@ -47,7 +37,7 @@
                         <div class="space-y-6">
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Nama Lengkap</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Nama</label>
                                 <input type="text" name="name" value="{{ $user->name ?? '' }}"
                                        class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
                             </div>
@@ -57,6 +47,18 @@
                                 <input type="email" name="email" value="{{ $user->email ?? '' }}"
                                        class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">No Telp</label>
+                                <input type="text" name="phone" value="{{ $user->phone ?? '' }}"
+                                       class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                            </div>
+
+                            <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Tanggal Lahir</label>
+                                    <input type="date" name="birth_date" value="{{ $user->birth_date ?? '' }}"
+                                        class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                                </div>
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Ganti Foto Profil</label>
@@ -90,6 +92,6 @@
 
         </div>
     </div>
+</div>
 
-</body>
-</html>
+</x-front-page.layout>
