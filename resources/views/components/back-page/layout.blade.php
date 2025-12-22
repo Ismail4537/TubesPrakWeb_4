@@ -19,9 +19,7 @@
         <main class="flex-1 flex flex-col">
             <x-back-page.header> {{ $title }} </x-back-page.header>
             <div class="p-8">
-                <div class="h-96 flex items-center justify-center text-gray-400">
                     {{ $slot }}
-                </div>
             </div>
         </main>
     </div>

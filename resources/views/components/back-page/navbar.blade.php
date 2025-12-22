@@ -11,33 +11,28 @@
 
             <nav class="mt-6 px-4 space-y-2">
                 
-                <a @click="activeMenu = 'Dashboard'" href="/dashboard" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group"
-                    :class="activeMenu === 'Dashboard' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'">
+                <x-back-page.nav-link href="/dashboard" :active="request()->is('dashboard')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span class="font-medium">Dashboard</span>
-                </a>
-
-                <a @click="activeMenu = 'User'" href="{{ route('dashboard.users.index') }}" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group"
-                    :class="activeMenu === 'User' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'">
+                </x-back-page.nav-link>
+         
+                <x-back-page.nav-link href="{{ route('dashboard.users.index') }}" :active="request()->is('dashboard/users')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    <span class="font-medium">Management User</span>
-                </a>
-
-                <a @click="activeMenu = 'Event'" href="{{ route('dashboard.events.index') }}" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
-                    :class="activeMenu === 'Event' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'">
+                    <span class="font-medium">User Management</span>
+                </x-back-page.nav-link>
+                    
+                <x-back-page.nav-link href="{{ route('dashboard.events.index') }}" :active="request()->is('dashboard/events')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span class="font-medium">Management Event</span>
-                </a>
+                    <span class="font-medium">Event Management</span>
+                </x-back-page.nav-link>
 
-                <a @click="activeMenu = 'Category'" href="{{ route('dashboard.categories') }}" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
-                    :class="activeMenu === 'Category' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'">
+
+                <x-back-page.nav-link href="{{ route('dashboard.categories') }}" :active="request()->is('dashboard/categories')">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">  <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
                     <span class="font-medium">Management Categories</span>
-                </a>
+                </x-back-page.nav-link>
+
+
 
             </nav>
 

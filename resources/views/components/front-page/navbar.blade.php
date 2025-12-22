@@ -13,9 +13,6 @@
             <x-front-page.nav-link href="/about" :active="request()->is('about')">About</x-front-page.nav-link>
             <x-front-page.nav-link href="/event" :active="request()->is('event')">Event</x-front-page.nav-link>
             <x-front-page.nav-link href="/contac" :active="request()->is('contac')">Contacts</x-front-page.nav-link>
-            @if (Auth::check() && Auth::user()->role === 'admin')  
-            <x-front-page.nav-link href="/dashboard" :active="request()->is('dashboard')">Dashboard</x-front-page.nav-link>
-            @endif
           </div>
         </div>
       </div>
@@ -24,30 +21,51 @@
       <div class="hidden md:block">
         <div class="ml-4 flex items-center md:ml-6 space-x-2">
           @guest
-          <x-front-page.nav-link href="/login" :active="request()->is('login')">Sign In</x-front-page.nav-link>
-          <x-front-page.nav-link href="/register" :active="request()->is('register')">Sign Up</x-front-page.nav-link>
+            <x-front-page.nav-link href="/login" :active="request()->is('login')">Sign In</x-front-page.nav-link>
+            <x-front-page.nav-link href="/register" :active="request()->is('register')">Sign Up</x-front-page.nav-link>
           @else
-          {{-- Logout button --}}
-          <form action="{{ route('logout') }}" method="POST" class="inline">
-            @csrf
-            <button type="submit" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition">
-              Logout
-            </button>
-          </form>
-          {{-- Logged in user info --}}
-          <a href={{ route('profile') }} class="text-gray-300 text-sm">
-            <img src=
-                        @if ( Auth::user()->profile_photo_path != null)
-                            {{ asset('storage/' . Auth::user()->profile_photo_path) }}
-                        @else
-                            "https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}&background=random&color=fff&size=128"
-                        @endif
-                            class="rounded-full w-10 h-10 object-cover border-4 border-white" alt="Profile">
-          </a>
+            <div class="relative ml-3" x-data="{ open: false }">
+              <div>
+                <button @click="open = !open" type="button" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="h-10 w-10 rounded-full object-cover border-2 border-white/20 hover:border-white transition" 
+                      src="{{ Auth::user()->profile_photo_path ? asset('storage/' . Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=random&color=fff' }}" 
+                      alt="Profile">
+                </button>
+              </div>
+
+              <div x-show="open" 
+                  @click.away="open = false"
+                  x-transition:enter="transition ease-out duration-100"
+                  x-transition:enter-start="transform opacity-0 scale-95"
+                  x-transition:enter-end="transform opacity-100 scale-100"
+                  x-transition:leave="transition ease-in duration-75"
+                  x-transition:leave-start="transform opacity-100 scale-100"
+                  x-transition:leave-end="transform opacity-0 scale-95"
+                  class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg  focus:outline-none" role="menu">
+                
+                <div class="px-4 py-2 border-b border-gray-100">
+                  <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                  <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                </div>
+
+                <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                
+                @if(Auth::user()->role === 'admin')
+                <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Dashboard Admin</a>
+                @endif
+
+                <form action="{{ route('logout') }}" method="POST">
+                  @csrf
+                  <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" role="menuitem">
+                    Sign out
+                  </button>
+                </form>
+              </div>
+            </div>
           @endguest
         </div>
       </div>
-
         <div class="-mr-2 flex md:hidden">
             <!-- Mobile menu button -->
             <button type="button" command="--toggle" commandfor="mobile-menu" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
@@ -94,16 +112,6 @@
                   <div class="text-base/5 font-medium text-white">{{ Auth::user()->name }}</div>
                   <div class="text-sm font-medium text-gray-400">{{ Auth::user()->email }}</div>
               </div>
-
-              <button type="button"
-                  class="relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:text-white">
-                  <span class="sr-only">View notifications</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                      class="size-6">
-                      <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-              </button>
           </div>
 
           <div class="mt-3 space-y-1 px-2">
@@ -111,11 +119,6 @@
               <a href="/dashboard"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">
                   Dashboard
-              </a>
-
-              <a href="#"
-                class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">
-                  Settings
               </a>
 
               <form action="{{ route('logout') }}" method="POST">
