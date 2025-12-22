@@ -13,7 +13,8 @@ class DashboardUsersController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('dashboard.Admin.users', compact('users'));
+        $users = User::paginate(10)->withQueryString();
+        return view('dashboard.Admin.users', compact('users'), ['title' => 'User Management']);
     }
 
     /**

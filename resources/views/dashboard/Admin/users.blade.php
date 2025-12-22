@@ -1,9 +1,5 @@
-<header>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</header>
-
-<body>
+<x-back-page.layout>
+<x-slot:title> {{$title}} </x-slot:title>
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
 
         <div class="p-4 flex items-center justify-between">
@@ -79,7 +75,7 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
-
+</x-back-page.layout>
     <div id="toast" class="fixed top-5 right-5 z-[100] hidden transform transition-all duration-300 ease-in-out translate-x-full">
         <div class="flex items-center w-full max-w-xs p-4 space-x-3 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 border-green-500">
             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
@@ -167,4 +163,3 @@
             showToast('Data user berhasil diupdate!');
         });
     </script>
-</body>

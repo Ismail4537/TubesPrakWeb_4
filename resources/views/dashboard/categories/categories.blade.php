@@ -1,10 +1,5 @@
-<header>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</header>
-
-<body>
-
+<x-back-page.layout>
+<x-slot:title> {{$title}} </x-slot:title>
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
         <!-- Search, Create, Filter -->
         <div class="p-4 flex items-center justify-between">
@@ -112,7 +107,7 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
-
+</x-back-page.layout>
     <div id="createCategoryModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     
     <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"></div>
@@ -307,4 +302,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-</body>

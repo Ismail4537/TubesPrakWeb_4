@@ -32,10 +32,10 @@ Route::get('event', [EventController::class, 'index'])->name('event.index');
 Route::get('event/{slug}', [EventController::class, 'show'])->name('event.show');
 
 Route::get('/dashboard', function () {
-    return view('dashboard.home', ["title" => "Dashboard"]);
+    return view('dashboard.home', ['title' => 'Dashboard']);
 })->middleware('isAdmin')->name('dashboard');
 
-Route::get('/dashboard/events', [DashboardEventController::class, 'adminIndex'])->middleware('isAdmin')->name('dashboard.events.index');
+Route::get('/dashboard/events', [DashboardEventController::class, 'Index'])->middleware('isAdmin')->name('dashboard.events.index');
 Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
 Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->middleware('isAdmin')->name('dashboard.events.store');
 Route::get('/dashboard/events/{id}/edit', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');

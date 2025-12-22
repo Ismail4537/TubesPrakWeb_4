@@ -1,10 +1,5 @@
-<header>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</header>
-
-<body>
-
+<x-back-page.layout>
+<x-slot:title> {{$title}} </x-slot:title>
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
         <!-- Search, Create, Filter -->
         <div class="p-4 flex items-center justify-between">
@@ -71,13 +66,13 @@
 
             <tbody>
 
-                @forelse ($events ?? [] as $index => $event)
+                @forelse ($listevent ?? [] as $index => $event)
                     <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
                         <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
-                        <td class="px-6 py-4">{{ $event['judul'] ?? '-' }}</td>
-                        <td class="px-6 py-4">{{ $event['kategori'] ?? '-' }}</td>
-                        <td class="px-6 py-4">{{ $event['tanggal'] ?? '-' }}</td>
-                        <td class="px-6 py-4">-</td>
+                        <td class="px-6 py-4">{{ $event['title'] ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $event['category']['name'] ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $event['start_date_time'] ?? '-' }} / {{ $event['end_date_time'] ?? '-' }}</td>
+                        <td class="px-6 py-4">{{ $event['status'] ?? '-' }}</td>
 
                         <!-- Aksi -->
                         <td class="px-6 py-4 text-center">
@@ -109,4 +104,4 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
-</body>
+</x-back-page.layout>

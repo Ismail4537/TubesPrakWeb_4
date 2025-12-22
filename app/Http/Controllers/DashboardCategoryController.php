@@ -13,7 +13,8 @@ class DashboardCategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return view('dashboard.categories.categories', compact('categories'));
+        $categories = Category::paginate(10)->withQueryString();
+        return view('dashboard.categories.categories', compact('categories'), ['title' => 'Category Management']);
 
     }
 

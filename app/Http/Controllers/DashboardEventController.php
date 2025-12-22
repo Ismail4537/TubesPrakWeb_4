@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Event;
 
 class DashboardEventController extends Controller
 {
@@ -46,18 +48,14 @@ class DashboardEventController extends Controller
     /**
      * Admin listing for dashboard (CRUD index).
      */
-    public function adminIndex()
-    {
-        $events = array_map([$this, 'prepareEventData'], $this->getEventsFromSession());
-        return view('dashboard.events.events', compact('events'));
-    }
 
     public function index()
     {
         // Panggil prepareEventData untuk setiap item
-        $listevent = array_map([$this, 'prepareEventData'], $this->events);
-
-        return view('front-page.event.index', compact('listevent'), ['title' => 'List Event']);
+        $listevent = Event::with(['creator','category'])->get();
+        $listevent = Event::paginate(10)->withQueryString();
+        $categories = Category::all();
+        return view('dashboard.events.events', compact('listevent', 'categories'), ['title' => 'List Event']);
     }
 
     public function show($slug) // Menerima $slug, bukan $id
