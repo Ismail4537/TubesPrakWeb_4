@@ -37,6 +37,7 @@ Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('aut
 Route::get('event/create', [EventController::class, 'create'])->middleware('auth')->name('event.create');
 Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
 Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
+Route::delete('event/delete/{id}', [EventController::class, 'destroy'])->middleware('auth')->name('event.destroy');
 
 Route::get('/dashboard', function () {
     return view('dashboard.home', ['title' => 'Dashboard']);

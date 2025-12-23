@@ -183,4 +183,13 @@ class EventController extends Controller
         ]);
         return redirect()->route('event.show', ['slug' => Str::slug($request->title)])->with('success', 'Event berhasil diperbarui!');
     }
+
+    public function destroy($id){
+        $event = Event::findOrFail($id);
+        if ($event->image_path) {
+            Storage::delete('public/' . $event->image_path);
+        }
+        $event->delete();
+        return redirect()->route('profile.creator')->with('success', 'Event berhasil dihapus!');
+    }
 }
