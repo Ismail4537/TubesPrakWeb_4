@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -12,8 +13,8 @@ class DashboardEventController extends Controller
     // Removed inline dummy data to keep controller clean.
     private $events = [];
 
-   // Method untuk menambahkan Slug dan Asset
-    private function prepareEventData($event) 
+    // Method untuk menambahkan Slug dan Asset
+    private function prepareEventData($event)
     {
         // 1. Tambahkan Slug berdasarkan Judul
         $event['slug'] = Str::slug($event['judul']);
@@ -52,7 +53,7 @@ class DashboardEventController extends Controller
     public function index()
     {
         // Panggil prepareEventData untuk setiap item
-        $listevent = Event::with(['creator','category'])->get();
+        $listevent = Event::with(['creator', 'category'])->get();
         $listevent = Event::paginate(10)->withQueryString();
         $categories = Category::all();
         return view('dashboard.events.events', compact('listevent', 'categories'), ['title' => 'List Event']);
@@ -194,30 +195,27 @@ class DashboardEventController extends Controller
     }
 
     public function search(Request $request)
-{
-    $q = $request->query('q');
-    $category = $request->query('category');
+    {
+        $q = $request->query('q');
+        $category = $request->query('category');
 
-    $events = Event::with('category')
-        ->when($q, function ($query) use ($q) {
-            $query->where('judul', 'LIKE', "%{$q}%");
-        })
-        ->when($category, function ($query) use ($category) {
-            $query->whereHas('category', function ($q2) use ($category) {
-                $q2->where('id', $category);
-            });
-        })
-        ->orderBy('id', 'desc')
-        ->limit(20)
-        ->get();
+        $events = Event::with('category')
+            ->when($q, function ($query) use ($q) {
+                $query->where('title', 'LIKE', "%{$q}%");
+            })
+            ->when($category, function ($query) use ($category) {
+                $query->whereHas('category', function ($q2) use ($category) {
+                    $q2->where('id', $category);
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->limit(20)
+            ->get();
 
-    $html = view('dashboard.events.partials.table-rows', compact('events'))->render();
+        $html = view('dashboard.events.partials.table-rows', compact('events'))->render();
 
-    return response()->json([
-        'html' => $html
-    ]);
-}
-
-
-
+        return response()->json([
+            'html' => $html
+        ]);
+    }
 }

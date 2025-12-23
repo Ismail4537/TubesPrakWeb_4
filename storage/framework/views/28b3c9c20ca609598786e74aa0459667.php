@@ -2,18 +2,18 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Dashboard - <?php echo e($title); ?></title>
-  <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-  <script src="https://unpkg.com/alpinejs" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard - <?php echo e($title); ?></title>
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
 
 </head>
 
 <body>
-    <div class="min-h-screen bg-gray-100 flex" x-data="{ sidebarOpen: true, activeMenu: '<?php echo e($title); ?>' }">        
+    <div class="min-h-screen bg-gray-100 flex" x-data="{ sidebarOpen: true, activeMenu: '<?php echo e($title); ?>' }">
         <?php if (isset($component)) { $__componentOriginal4304550f494574c7faa24c18b4147ea7 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4304550f494574c7faa24c18b4147ea7 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.back-page.navbar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -55,11 +55,15 @@
 <?php unset($__componentOriginal22b8bd1dcb5917d30cf2f01ab0f45deb); ?>
 <?php endif; ?>
             <div class="p-8">
-                    <?php echo e($slot); ?>
+                <?php echo e($slot); ?>
 
+
+                
+                <?php echo $__env->yieldPushContent('scripts'); ?>
             </div>
         </main>
     </div>
 </body>
 
-</html><?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/components/back-page/layout.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/components/back-page/layout.blade.php ENDPATH**/ ?>
