@@ -81,7 +81,7 @@ class DashboardEventController extends Controller
 
     public function create()
     {
-        return view('dashboard.events.create');
+        return view('dashboard.events.create', ['title' => 'Create Event']);
     }
 
     public function store(Request $request)
@@ -128,14 +128,12 @@ class DashboardEventController extends Controller
      */
     public function edit(string $id)
     {
-        $events = $this->getEventsFromSession();
-        $event = collect($events)->firstWhere('id', (int)$id);
-
+        $event = Event::find($id);
         if (!$event) {
             abort(404, 'Event tidak ditemukan.');
         }
 
-        return view('dashboard.events.edit', compact('event'));
+        return view('dashboard.events.edit', compact('event'), ['title' => 'Edit Event']);
     }
 
     /**

@@ -78,4 +78,21 @@ class DashboardUsersController extends Controller
 
         return redirect('/dashboard/users')->with('success', 'User berhasil dihapus');
     }
+
+    /**
+     * AJAX live search for users
+     */
+    public function search(Request $request)
+    {
+        $q = $request->query('q', '');
+
+        $users = User::when($q, function ($builder) use ($q) {
+            $builder->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
+        })->limit(50)->get();
+
+        $html = view('dashboard.Admin._users_rows', compact('users'))->render();
+
+        return response()->json(['html' => $html]);
+    }
 }

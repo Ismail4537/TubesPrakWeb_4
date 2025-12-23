@@ -23,7 +23,7 @@ class DashboardCategoryController extends Controller
      */
     public function create()
     {
-        return view('dashboard.categories.create');
+        return view('dashboard.categories.create', ['title' => 'Create Category']);
 
     }
 
@@ -90,5 +90,21 @@ public function update(Request $request, string $id)
         ->route('categories.index')
         ->with('success', 'Category berhasil dihapus');
 }
+
+    /**
+     * AJAX live search for categories
+     */
+    public function search(Request $request)
+    {
+        $q = $request->query('q', '');
+
+        $categories = Category::when($q, function ($builder) use ($q) {
+            $builder->where('name', 'like', "%{$q}%");
+        })->limit(50)->get();
+
+        $html = view('dashboard.categories._categories_rows', compact('categories'))->render();
+
+        return response()->json(['html' => $html]);
+    }
 
 }

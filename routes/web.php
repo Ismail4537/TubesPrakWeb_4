@@ -37,12 +37,13 @@ Route::get('/dashboard', function () {
 })->middleware('isAdmin')->name('dashboard');
 
 Route::get('/dashboard/events', [DashboardEventController::class, 'Index'])->middleware('isAdmin')->name('dashboard.events.index');
-Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
 Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->middleware('isAdmin')->name('dashboard.events.store');
-Route::get('/dashboard/events/{id}/edit', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');
-Route::put('/dashboard/events/{id}', [DashboardEventController::class, 'update'])->middleware('isAdmin')->name('dashboard.events.update');
-Route::delete('/dashboard/events/{id}', [DashboardEventController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.events.destroy');
+Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
+Route::get('/dashboard/events/edit/{id}', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');
+Route::put('/dashboard/events/update/{id}', [DashboardEventController::class, 'update'])->middleware('isAdmin')->name('dashboard.events.update');
+Route::delete('/dashboard/events/delete/{id}', [DashboardEventController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.events.destroy');
 Route::get('/dashboard/categories', [DashboardCategoryController::class, 'index'])->middleware('isAdmin')->name('dashboard.categories');
+Route::get('/dashboard/categories/create', [DashboardCategoryController::class, 'create'])->middleware('isAdmin')->name('dashboard.categories.create');
 
 Route::get('/dashboard/users', [DashboardUsersController::class, 'index'])->middleware('isAdmin')->name('dashboard.users.index');
 Route::get('/dashboard/users/{id}/edit', [DashboardUsersController::class, 'edit'])->middleware('isAdmin')->name('dashboard.users.edit');
@@ -50,6 +51,8 @@ Route::put('/dashboard/users/{id}', [DashboardUsersController::class, 'update'])
 Route::delete('/dashboard/users/{id}', [DashboardUsersController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.users.destroy');
 Route::get('/dashboard/users/create', [DashboardUsersController::class, 'create'])->middleware('isAdmin')->name('dashboard.users.create');
 Route::post('/dashboard/users', [DashboardUsersController::class, 'store'])->middleware('isAdmin')->name('dashboard.users.store');
+// Live search (AJAX) for users
+Route::get('/dashboard/users/search', [DashboardUsersController::class, 'search'])->middleware('isAdmin')->name('dashboard.users.search');
 
 Route::get('/login', [LoginController::class, 'create'])->middleware('guest')->name('login');
 Route::post('/login', [LoginController::class, 'store'])->middleware('guest');
