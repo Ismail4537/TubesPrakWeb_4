@@ -22,6 +22,11 @@
     </div>
     <?php if(Auth::user()->id == $event->creator_id): ?>
     <a href="<?php echo e(route('event.edit', ['id' => $event->id])); ?>">Edit Event</a>
+    <form action="<?php echo e(route('event.destroy', ['id' => $event->id])); ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');" style="display:inline;">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('DELETE'); ?>
+        <button type="submit" class="text-red-600 hover:text-red-800 ml-4">Delete Event</button>
+    </form>
     <?php endif; ?>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="space-y-4 lg:col-start-3">

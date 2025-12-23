@@ -13,6 +13,11 @@
     </div>
     @if (Auth::user()->id == $event->creator_id)
     <a href="{{ route('event.edit', ['id' => $event->id]) }}">Edit Event</a>
+    <form action="{{ route('event.destroy', ['id' => $event->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="text-red-600 hover:text-red-800 ml-4">Delete Event</button>
+    </form>
     @endif
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="space-y-4 lg:col-start-3">
