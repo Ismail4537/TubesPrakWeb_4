@@ -78,8 +78,6 @@
                 </a>
             </div>
 
-
-
             <!-- Event Reporting Card -->
             <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm p-6 border border-purple-200">
                 <div class="flex items-start justify-between mb-4">
