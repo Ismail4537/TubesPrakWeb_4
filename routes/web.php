@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardCategoryController;
 use App\Http\Controllers\ContacController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\EventReportController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -71,3 +72,7 @@ Route::resource('categories', DashboardCategoryController::class);
 Route::get('/reports/users', [UserReportController::class, 'index'])->middleware('isAdmin')->name('reports.users.index');
 Route::get('/reports/users/pdf/download', [UserReportController::class, 'downloadPDF'])->middleware('isAdmin')->name('reports.users.pdf.download');
 Route::get('/reports/users/pdf/view', [UserReportController::class, 'viewPDF'])->middleware('isAdmin')->name('reports.users.pdf.view');
+
+Route::get('/reports/events', [EventReportController::class, 'index'])->middleware('isAdmin')->name('reports.events.index');
+Route::get('/reports/events/pdf/download', [EventReportController::class, 'downloadPDF'])->middleware('isAdmin')->name('reports.events.pdf.download');
+Route::get('/reports/events/pdf/view', [EventReportController::class, 'viewPDF'])->middleware('isAdmin')->name('reports.events.pdf.view');
