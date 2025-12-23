@@ -193,5 +193,31 @@ class DashboardEventController extends Controller
         return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil dihapus');
     }
 
+    public function search(Request $request)
+{
+    $q = $request->query('q');
+    $category = $request->query('category');
+
+    $events = Event::with('category')
+        ->when($q, function ($query) use ($q) {
+            $query->where('judul', 'LIKE', "%{$q}%");
+        })
+        ->when($category, function ($query) use ($category) {
+            $query->whereHas('category', function ($q2) use ($category) {
+                $q2->where('id', $category);
+            });
+        })
+        ->orderBy('id', 'desc')
+        ->limit(20)
+        ->get();
+
+    $html = view('dashboard.events.partials.table-rows', compact('events'))->render();
+
+    return response()->json([
+        'html' => $html
+    ]);
+}
+
+
 
 }
