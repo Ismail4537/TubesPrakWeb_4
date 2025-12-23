@@ -17,14 +17,13 @@
                 </div>
             </div>
 
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="shrink-0 flex items-center text-body bg-neutral-secondary-medium border border-default-medium px-3 py-2 rounded-base hover:bg-neutral-tertiary-medium hover:text-heading text-sm">
-                Filter
-                <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 9-7 7-7-7" />
-                </svg>
-            </button>
+            <select id="filterRole"
+                class="px-3 py-2 bg-neutral-secondary-medium border border-default-medium rounded-base text-sm">
+                <option value="">Semua Role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
+
         </div>
 
         <table class="w-full text-sm text-left text-body">
@@ -40,7 +39,8 @@
                     <th class="px-6 py-3 font-medium text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="usersTableBody">
+
 
                 @forelse($users ?? [] as $index => $user)
                     <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
@@ -80,41 +80,52 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
-</x-back-page.layout>
 
-@push('scripts')
-    <script>
-        (function(){
-            function debounce(fn, delay){
-                let t;
-                return function(){
-                    const args = arguments;
-                    clearTimeout(t);
-                    t = setTimeout(function(){ fn.apply(null, args); }, delay);
+    @push('scripts')
+        <script>
+            (function() {
+                function debounce(fn, delay = 300) {
+                    let t;
+                    return (...args) => {
+                        clearTimeout(t);
+                        t = setTimeout(() => fn(...args), delay);
+                    };
                 }
-            }
 
-            const input = document.getElementById('searchUsers');
-            if(!input) return;
-            const table = document.querySelector('table');
-            if(!table) return;
-            const tbody = table.querySelector('tbody');
+                const input = document.getElementById('searchUsers');
+                const roleSelect = document.getElementById('filterRole');
+                const tbody = document.getElementById('usersTableBody');
+                const url = "{{ route('dashboard.users.search') }}";
 
-            const fetchUrl = '{{ route('dashboard.users.search') }}';
+                if (!input || !tbody) return;
 
-            const onSearch = debounce(function(e){
-                const q = (e.target.value || '').trim();
-                const url = fetchUrl + '?q=' + encodeURIComponent(q);
-                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                    .then(r => r.json())
-                    .then(data => {
-                        if(tbody && data.html !== undefined){
-                            tbody.innerHTML = data.html;
-                        }
-                    }).catch(()=>{});
-            }, 250);
+                const fetchData = debounce(async () => {
+                    const q = input.value.trim();
+                    const role = roleSelect ? roleSelect.value : '';
 
-            input.addEventListener('input', onSearch);
-        })();
-    </script>
-@endpush
+                    const params = new URLSearchParams({
+                        q: q,
+                        role: role
+                    });
+
+                    try {
+                        const res = await fetch(`${url}?${params.toString()}`);
+                        const data = await res.json();
+                        tbody.innerHTML = data.html;
+                    } catch (e) {
+                        tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center text-red-500 py-4">
+                        Gagal memuat data
+                    </td>
+                </tr>`;
+                    }
+                });
+
+                input.addEventListener('input', fetchData);
+                if (roleSelect) roleSelect.addEventListener('change', fetchData);
+            })();
+        </script>
+    @endpush
+
+</x-back-page.layout>

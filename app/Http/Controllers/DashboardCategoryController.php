@@ -95,16 +95,17 @@ public function update(Request $request, string $id)
      * AJAX live search for categories
      */
     public function search(Request $request)
-    {
-        $q = $request->query('q', '');
+{
+    $q = $request->query('q', '');
 
-        $categories = Category::when($q, function ($builder) use ($q) {
-            $builder->where('name', 'like', "%{$q}%");
-        })->limit(50)->get();
+    $categories = Category::when($q, function ($builder) use ($q) {
+        $builder->where('name', 'like', "%{$q}%");
+    })->limit(50)->get();
 
-        $html = view('dashboard.categories._categories_rows', compact('categories'))->render();
+    $html = view('dashboard.categories._categories_rows', compact('categories'))->render();
 
-        return response()->json(['html' => $html]);
-    }
+    return response()->json(['html' => $html]);
+}
+
 
 }

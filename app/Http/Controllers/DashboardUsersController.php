@@ -11,11 +11,17 @@ class DashboardUsersController extends Controller
      * Display a listing of the users.
      */
     public function index()
-    {
-        $users = User::all();
-        $users = User::paginate(10)->withQueryString();
-        return view('dashboard.Admin.users', compact('users'), ['title' => 'User Management']);
-    }
+{
+    $users = User::orderBy('name')
+        ->paginate(10);
+
+    return view(
+        'dashboard.Admin.users',
+        compact('users'),
+        ['title' => 'User Management']
+    );
+}
+
 
     /**
      * Show the form for editing the specified user.
@@ -83,16 +89,28 @@ class DashboardUsersController extends Controller
      * AJAX live search for users
      */
     public function search(Request $request)
-    {
-        $q = $request->query('q', '');
+{
+    $q = $request->query('q');
+    $role = $request->query('role');
 
-        $users = User::when($q, function ($builder) use ($q) {
-            $builder->where('name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%");
-        })->limit(50)->get();
+    $users = User::query()
+        ->when($q, function ($query) use ($q) {
+            $query->where(function ($q2) use ($q) {
+                $q2->where('name', 'like', "%{$q}%")
+                   ->orWhere('email', 'like', "%{$q}%");
+            });
+        })
+        ->when($role, function ($query) use ($role) {
+            $query->where('role', $role);
+        })
+        ->orderBy('name')
+        ->limit(20)
+        ->get();
 
-        $html = view('dashboard.Admin._users_rows', compact('users'))->render();
+    return response()->json([
+        'html' => view('dashboard.Admin._users_rows', compact('users'))->render()
+    ]);
+}
 
-        return response()->json(['html' => $html]);
-    }
+
 }

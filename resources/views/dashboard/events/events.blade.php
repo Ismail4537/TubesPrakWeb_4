@@ -11,19 +11,18 @@
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
-                    <input type="text" placeholder="Cari event..."
+                    <input id="searchEvent" type="text" placeholder="Cari event..."
                         class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
                 </div>
 
                 <div class="shrink-0">
-                    <select
-                        class="block w-full pl-3 pr-8 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none appearance-none cursor-pointer shadow-sm"
-                        style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.25rem;">
+                    <select id="filterCategory" class="block w-full ...">
                         <option value="">Semua Kategori</option>
-                        <option value="seminar">Seminar</option>
-                        <option value="workshop">Workshop</option>
-                        <option value="expo">Expo</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
                     </select>
+
                 </div>
             </div>
 
@@ -49,7 +48,7 @@
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 text-sm">
+                    <tbody id="eventTableBody" class="divide-y divide-gray-200 text-sm">
                         @forelse ($listevent ?? [] as $index => $event)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600">{{ $index + 1 }}</td>
@@ -127,4 +126,49 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            (function() {
+                const searchInput = document.getElementById('searchEvent');
+                const categorySelect = document.getElementById('filterCategory');
+                const tableBody = document.getElementById('eventTableBody');
+                const fetchUrl = "{{ route('dashboard.events.search') }}";
+
+                let debounceTimer;
+
+                function debounceSearch() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(fetchData, 300);
+                }
+
+                async function fetchData() {
+                    const q = searchInput.value.trim();
+                    const category = categorySelect.value;
+
+                    const params = new URLSearchParams({
+                        q,
+                        category
+                    });
+
+                    try {
+                        const res = await fetch(`${fetchUrl}?${params}`);
+                        const data = await res.json();
+                        tableBody.innerHTML = data.html;
+                    } catch (e) {
+                        tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-6 text-center text-red-500">
+                        Gagal memuat data
+                    </td>
+                </tr>
+            `;
+                    }
+                }
+
+                searchInput.addEventListener('input', debounceSearch);
+                categorySelect.addEventListener('change', fetchData);
+            })();
+        </script>
+    @endpush
+
 </x-back-page.layout>

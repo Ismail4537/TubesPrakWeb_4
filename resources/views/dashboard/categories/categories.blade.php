@@ -16,7 +16,7 @@
                                 d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
-                    <input type="text" placeholder="Search"
+                    <input id="searchCategory" type="text" placeholder="Search"
                         class="block w-full ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium
                        text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
                 </div>
@@ -31,7 +31,7 @@
 
             </div>
 
-            <!-- Filter Button -->
+            <!-- Filter Button --
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
                 class="shrink-0 flex items-center text-body bg-neutral-secondary-medium border border-default-medium
                px-3 py-2 rounded-base hover:bg-neutral-tertiary-medium hover:text-heading text-sm">
@@ -40,7 +40,7 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m19 9-7 7-7-7" />
                 </svg>
-            </button>
+            </button -->
 
             <!-- Dropdown -->
             <div id="dropdown"
@@ -65,7 +65,8 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="categoriesTableBody">
+
 
                 @foreach ($categories as $index => $category)
                     <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
@@ -107,4 +108,61 @@
             <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('searchCategory');
+            const tableBody = document.getElementById('categoryTableBody');
+
+            let timer = null;
+
+            input.addEventListener('keyup', function() {
+                clearTimeout(timer);
+
+                timer = setTimeout(() => {
+                    fetch(`{{ route('dashboard.categories.search') }}?q=${this.value}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            tableBody.innerHTML = data.html;
+                        });
+                }, 300); // debounce
+            });
+        });
+    </script>
+    @push('scripts')
+        <script>
+            (function() {
+                const input = document.getElementById('searchCategory');
+                const tbody = document.getElementById('categoriesTableBody');
+                const fetchUrl = "{{ route('dashboard.categories.search') }}";
+
+                if (!input || !tbody) return;
+
+                let timer;
+
+                input.addEventListener('input', function() {
+                    clearTimeout(timer);
+
+                    timer = setTimeout(async () => {
+                        const q = input.value.trim();
+
+                        try {
+                            const res = await fetch(`${fetchUrl}?q=${encodeURIComponent(q)}`);
+                            const data = await res.json();
+                            tbody.innerHTML = data.html;
+                        } catch (e) {
+                            tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="px-6 py-4 text-center text-red-500">
+                            Gagal memuat data
+                        </td>
+                    </tr>
+                `;
+                        }
+                    }, 300);
+                });
+            })();
+        </script>
+    @endpush
+
+
 </x-back-page.layout>
