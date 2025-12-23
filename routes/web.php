@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardUsersController;
 use App\Http\Controllers\DashboardCategoryController;
 use App\Http\Controllers\ContacController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserReportController;
 
 Route::get('/', function () {
     return view('front-page.home', ["title" => "Home"]);
@@ -58,6 +59,7 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->middleware
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
 Route::resource('categories', DashboardCategoryController::class);
 
-
-
-
+// PDF Reporting Routes
+Route::get('/reports/users', [UserReportController::class, 'index'])->middleware('isAdmin')->name('reports.users.index');
+Route::get('/reports/users/pdf/download', [UserReportController::class, 'downloadPDF'])->middleware('isAdmin')->name('reports.users.pdf.download');
+Route::get('/reports/users/pdf/view', [UserReportController::class, 'viewPDF'])->middleware('isAdmin')->name('reports.users.pdf.view');

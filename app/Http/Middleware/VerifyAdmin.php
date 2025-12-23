@@ -15,10 +15,16 @@ class VerifyAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $role = $request->user()->role;
-        if( $role != 'admin' ) {
-            abort(403, 'Unauthorized action.');
+        // Check if user is authenticated
+        if (!auth()->check()) {
+            abort(403, 'You must be logged in to access this resource.');
         }
+        
+        // Check if user has admin role
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Access denied. Admin privileges required.');
+        }
+        
         return $next($request);
     }
 }
