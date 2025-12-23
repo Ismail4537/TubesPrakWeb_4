@@ -69,7 +69,7 @@
                             @if ($event['price'] == 0)
                                 FREE
                             @else
-                                Rp,{{ $event['price'] }},-
+                                Rp,{{ number_format($event['price'], 0, ',', '.') }},-
                             @endif
                         </span>
                     </div>

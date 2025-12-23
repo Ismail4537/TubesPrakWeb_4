@@ -18,35 +18,54 @@
         
         <form action="/register" method="POST" class="px-8 pb-8 space-y-5">
             @csrf
-            
-            @if ($errors->any())
-                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                    <ul class="list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-                <input type="text" name="username" value="{{ old('username') }}" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="usertampan123">
+                <input type="text" name="username" value="{{ old('username') }}" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Rodyan">
+                @error('username')
+                    <p class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                 <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="nama@email.com">
+                @error('email')
+                    <p class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                <input type="tel" name="phone" value="{{ old('phone') }}" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="08123456789">
+                @error('phone')
+                    <p class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
                 <input type="password" name="password" required minlength="8" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="••••••••">
+                @error('password')
+                    <p class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
                 <input type="password" name="password_confirmation" required minlength="8" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="••••••••">
+                @error('password_confirmation')
+                    <p class="text-red-600 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <button type="submit" style="cursor: pointer; z-index: 10; position: relative;"

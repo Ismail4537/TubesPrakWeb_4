@@ -32,7 +32,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:21',
         ],
         [
             'name.required' => 'Nama lengkap wajib diisi.',
