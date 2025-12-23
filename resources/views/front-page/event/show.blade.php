@@ -11,12 +11,14 @@
             <p>Back</p>
         </a> 
     </div>
-
+    @if (Auth::user()->id == $event->creator_id)
+    <a href="{{ route('event.edit', ['id' => $event->id]) }}">Edit Event</a>
+    @endif
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="space-y-4 lg:col-start-3">
             <div class="relative w-full h-auto rounded-lg overflow-hidden shadow-xl">
                 @if ($event['image_path'] != null)
-                    <img src="{{ $event['image_path'] }}" alt="{{ $event['title'] }}" class="w-full h-full object-cover">
+                    <img src="{{ asset($event['image_path']) }}" alt="{{ $event['title'] }}" class="w-full h-full object-cover">
                 @else
                     <img src="{{ asset('Image/Preview.jpg') }}" alt="{{ $event['title'] }}" class="w-full h-full object-cover">
                 @endif
@@ -26,7 +28,7 @@
                             @if ($event['price'] == 0)
                                 FREE
                             @else
-                                {{ $event['price'] }}
+                                Rp,{{ number_format($event['price'], 0, ',', '.') }},-
                             @endif
                         </div>
                         <button class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition">
@@ -68,6 +70,26 @@
             <div class="mt-6">
                 <span class="inline-block bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded-full">{{ $event->category->name }}</span>
             </div>
+            <br>
+            <h2 class="text-2xl font-bold text-gray-900 mb-3 border-b pb-2">
+                Yang mengikuti event ini
+            </h2>
+            <div class="text-gray-700 space-y-4">
+                @if ($registrants->isEmpty())
+                    <p>Belum ada yang mendaftar untuk event ini.</p>
+                @else
+                <div class="flex gap-5 items-center">
+                    @foreach ($registrants as $registrant)
+                    <div>
+                        <img src="{{ asset($registrant->user->profile_photo_path ?? 'https://ui-avatars.com/api/?name='.$registrant->user->name) }}" alt="" class="w-10 h-10 rounded-full flex items-center justify-center font-bold">
+                        {{ $registrant->user->name }}
+                    </div>
+                    @endforeach
+                    @if ($registrantsCount > $registrants->count())
+                        dan {{ $registrantsCount - $registrants->count() }} lainnya...
+                    @endif
+                </div>
+                @endif
         </div>
     </div>
 </div>

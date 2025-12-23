@@ -14,28 +14,12 @@
         </div>
     <div class="p-4 grid grid-cols-2 gap-2 justify-items-center md:grid-cols-3 lg:grid-cols-5 lg:gap-6.5">
         @foreach ($listContact as $contact)
-        <a href="{{ route('contac.show', ['id' => $contact['id']]) }}">
-            <div class="border border-gray-300 w-full max-w-xs bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">    
-
-                {{-- Gambar --}}
-                <div class="relative h-32 sm:h-42"> 
-                    <img src=
-                    @if ($contact['profile_photo_path'] != null)
-                        {{ asset('storage/' . $contact->profile_photo_path) }}
-                    @else
-                        "https://ui-avatars.com/api/?name={{ urlencode($contact->name ?? 'User') }}&background=random&color=fff&size=128"
-                    @endif
-                    alt="{{ $contact['name'] }}" class="w-full h-full object-cover rounded-t-xl">
+            <a href="{{ route('contac.show', ['id' => $contact->id]) }}" class="my-4 shrink-0 w-48 ">
+                <div class="p-2 flex flex-col items-center w-full max-w-xs rounded-xl overflow-hidden h-full">
+                    <img src="{{ asset($contact->profile_photo_path ?? 'https://ui-avatars.com/api/?name='.$contact->name) }}" alt="gambar" class="w-35 h-35 rounded-full object-cover mb-4">
+                    <h2 class="text-md font-medium text-gray-900 text-center">{{ $contact->name }}</h2>
                 </div>
-
-                {{-- Deskripsi --}}
-                <div class="px-4 pt-3 grow flex flex-col">
-                    <h2 align="center" class="font-semibold text-gray-900 mb-3">
-                        {{ $contact['name'] }}
-                    </h2>
-                </div>
-            </div>
-        </a>
+            </a>
         @endforeach
     </div>
 {{-- pagination --}}

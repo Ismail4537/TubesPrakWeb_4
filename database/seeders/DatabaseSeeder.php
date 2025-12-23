@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Category;
+use App\Models\Registrant;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,5 +30,6 @@ class DatabaseSeeder extends Seeder
 
         Category::factory(5)->create();
         Event::factory(20)->recycle(User::all())->recycle(Category::all())->create();
+        Registrant::factory(50)->recycle(User::all())->recycle(Event::all())->create();
     }
 }

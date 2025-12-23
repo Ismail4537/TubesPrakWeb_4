@@ -10,10 +10,11 @@ use App\Http\Controllers\DashboardCategoryController;
 use App\Http\Controllers\ContacController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('front-page.home', ["title" => "Home"]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// AJAX endpoint untuk Top Picks per tab
+Route::get('/top-picks', [HomeController::class, 'topPicks'])->name('top.picks');
 
 Route::get('/about', function () {
     return view('front-page.about', ["title" => "About"]);
@@ -30,7 +31,11 @@ Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
-Route::get('event/{slug}', [EventController::class, 'show'])->name('event.show');
+Route::get('event/show/{slug}', [EventController::class, 'show'])->name('event.show');
+Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('auth')->name('event.edit');
+Route::get('event/create', [EventController::class, 'create'])->middleware('auth')->name('event.create');
+Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
+Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
 
 Route::get('/dashboard', function () {
     return view('dashboard.home', ['title' => 'Dashboard']);
