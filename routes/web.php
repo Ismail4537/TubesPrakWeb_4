@@ -31,6 +31,8 @@ Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show
 
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
+// Live search (front)
+Route::get('event/search', [EventController::class, 'search'])->name('event.search');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
 Route::get('event/show/{slug}', [EventController::class, 'show'])->name('event.show');
 Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('auth')->name('event.edit');
