@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Event;
@@ -12,8 +13,8 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-   // Method untuk menambahkan Slug dan Asset
-    private function prepareEventData($event) 
+    // Method untuk menambahkan Slug dan Asset
+    private function prepareEventData($event)
     {
         // 1. Tambahkan Slug berdasarkan Judul
         $event['slug'] = Str::slug($event['title']);
@@ -25,7 +26,7 @@ class EventController extends Controller
         // Panggil prepareEventData untuk setiap item
         // $listevent = array_map([$this, 'prepareEventData'], $this->events);
         $categories = Category::all();
-        $listevent = Event::with(['creator','category'])->get();
+        $listevent = Event::with(['creator', 'category'])->get();
         $listevent = Event::paginate(12)->withQueryString();
         return view('front-page.event.index', ['listevent' => $listevent, 'categories' => $categories], ['title' => 'List Event']);
     }
@@ -45,6 +46,7 @@ class EventController extends Controller
         // 2. Tambahkan asset() dan slug ke data yang ditemukan sebelum dikirim ke view
         $event = $this->prepareEventData($event);
 
+        $allRegistrants = Registrant::where('event_id', $event->id)->get();
         $registrants = Registrant::with('user')->where('event_id', $event->id)->take(5)->get();
         $registrantsCount = Registrant::where('event_id', $event->id)->count();
 
@@ -52,41 +54,47 @@ class EventController extends Controller
             'detail' => $event,
             'title' => 'Detail Event: ' . $event['title'],
             'registrants' => $registrants,
-            'registrantsCount' => $registrantsCount
+            'registrantsCount' => $registrantsCount,
+            'allRegistrants' => $allRegistrants,
         ]);
     }
 
-    public function create(){
+    public function create()
+    {
         $categories = Category::all();
         return view('front-page.event.form', ['title' => 'Create Event', 'categories' => $categories]);
     }
 
-    public function store(Request $request){
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
-            'category' => 'required|exists:categories,id',
-            'start_date_time' => 'required|date',
-            'end_date_time' => 'required|date',
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'price' => 'required|numeric', 
-        ],
-        [
-            'title.required' => 'Judul event wajib diisi.',
-            'description.required' => 'Deskripsi event wajib diisi.',
-            'location.required' => 'Lokasi event wajib diisi.',
-            'category.required' => 'Kategori event wajib dipilih.',
-            'category.exists' => 'Kategori yang dipilih tidak valid.',
-            'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
-            'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
-            'image_path.required' => 'Gambar event wajib diisi.',
-            'price.required' => 'Harga event wajib diisi.',
-        ]);
+    public function store(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'location' => 'required|string|max:255',
+                'category' => 'required|exists:categories,id',
+                'start_date_time' => 'required|date',
+                'end_date_time' => 'required|date',
+                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'price' => 'required|numeric',
+            ],
+            [
+                'title.required' => 'Judul event wajib diisi.',
+                'description.required' => 'Deskripsi event wajib diisi.',
+                'location.required' => 'Lokasi event wajib diisi.',
+                'category.required' => 'Kategori event wajib dipilih.',
+                'category.exists' => 'Kategori yang dipilih tidak valid.',
+                'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'image_path.required' => 'Gambar event wajib diisi.',
+                'price.required' => 'Harga event wajib diisi.',
+            ]
+        );
         if ($validator->fails()) {
             return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         if ($request->start_date_time >= $request->end_date_time) {
@@ -116,40 +124,45 @@ class EventController extends Controller
         return redirect()->route('event.show', ['slug' => Str::slug($request->title)])->with('success', 'Event berhasil dibuat!');
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $event = Event::findOrFail($id);
         $categories = Category::all();
         return view('front-page.event.form', compact('event', 'categories'), ['title' => 'Edit Event']);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $event = Event::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
-            'category' => 'required|exists:categories,id',
-            'start_date_time' => 'required|date',
-            'end_date_time' => 'required|date',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'price' => 'required|numeric', 
-        ],
-        [
-            'title.required' => 'Judul event wajib diisi.',
-            'description.required' => 'Deskripsi event wajib diisi.',
-            'location.required' => 'Lokasi event wajib diisi.',
-            'category.required' => 'Kategori event wajib dipilih.',
-            'category.exists' => 'Kategori yang dipilih tidak valid.',
-            'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
-            'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
-            'image_path.image' => 'Path gambar event harus berupa file gambar.',
-            'price.required' => 'Harga event wajib diisi.',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'location' => 'required|string|max:255',
+                'category' => 'required|exists:categories,id',
+                'start_date_time' => 'required|date',
+                'end_date_time' => 'required|date',
+                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'price' => 'required|numeric',
+            ],
+            [
+                'title.required' => 'Judul event wajib diisi.',
+                'description.required' => 'Deskripsi event wajib diisi.',
+                'location.required' => 'Lokasi event wajib diisi.',
+                'category.required' => 'Kategori event wajib dipilih.',
+                'category.exists' => 'Kategori yang dipilih tidak valid.',
+                'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'image_path.image' => 'Path gambar event harus berupa file gambar.',
+                'price.required' => 'Harga event wajib diisi.',
+            ]
+        );
         if ($validator->fails()) {
             return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         if ($request->start_date_time >= $request->end_date_time) {
@@ -158,16 +171,15 @@ class EventController extends Controller
                 ->withInput();
         }
 
-            if ($event->image_path != null) 
-            {
-                $imagePath = $event->image_path;
-            } else {
-                $imagePath = null;
-            }
-            if ($request->hasFile('image_path')) {
-                Storage::delete('public/' . $imagePath);
-                $imagePath = $request->file('image_path')->store('event-images', 'public');
-            }
+        if ($event->image_path != null) {
+            $imagePath = $event->image_path;
+        } else {
+            $imagePath = null;
+        }
+        if ($request->hasFile('image_path')) {
+            Storage::delete('public/' . $imagePath);
+            $imagePath = $request->file('image_path')->store('event-images', 'public');
+        }
 
         $event->update([
             'title' => $request->title,
@@ -184,7 +196,8 @@ class EventController extends Controller
         return redirect()->route('event.show', ['slug' => Str::slug($request->title)])->with('success', 'Event berhasil diperbarui!');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $event = Event::findOrFail($id);
         if ($event->image_path) {
             Storage::delete('public/' . $event->image_path);

@@ -9,14 +9,15 @@ use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
-    private function prepareEventData($event) 
+    private function prepareEventData($event)
     {
         // 1. Tambahkan Slug berdasarkan Judul
         $event['slug'] = Str::slug($event['title']);
         return $event;
     }
 
-    public function index(){
+    public function index()
+    {
         $topUsers = User::withCount('events')
             ->orderBy('events_count', 'desc')
             ->take(6)

@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EventReportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // AJAX endpoint untuk Top Picks per tab
@@ -32,7 +33,7 @@ Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
-Route::get('event/show/{slug}', [EventController::class, 'show'])->name('event.show');
+Route::get('event/show/{slug}', [EventController::class, 'show'])->middleware('auth')->name('event.show');
 Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('auth')->name('event.edit');
 Route::get('event/create', [EventController::class, 'create'])->middleware('auth')->name('event.create');
 Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
@@ -93,3 +94,9 @@ Route::get('/reports/users/pdf/view', [UserReportController::class, 'viewPDF'])-
 Route::get('/reports/events', [EventReportController::class, 'index'])->middleware('isAdmin')->name('reports.events.index');
 Route::get('/reports/events/pdf/download', [EventReportController::class, 'downloadPDF'])->middleware('isAdmin')->name('reports.events.pdf.download');
 Route::get('/reports/events/pdf/view', [EventReportController::class, 'viewPDF'])->middleware('isAdmin')->name('reports.events.pdf.view');
+
+// Payments (Midtrans Snap)
+Route::get('/payment/event/{event}', [PaymentController::class, 'show'])->middleware('auth')->name('payment.show');
+Route::post('/payment/event/{event}', [PaymentController::class, 'create'])->middleware('auth')->name('payment.create');
+Route::get('/payment/result/event/{event}', [PaymentController::class, 'result'])->middleware('auth')->name('payment.result');
+// Notification handled via API route (no CSRF)

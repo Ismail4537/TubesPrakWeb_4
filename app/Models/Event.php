@@ -25,35 +25,40 @@ class Event extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function registrants()
+    {
+        return $this->hasMany(Registrant::class, 'event_id');
+    }
+
     public function scopeFilter(Builder $query, array $filters): void
     {
         $query->when(
             $filters['search'] ?? false,
-        fn($query, $search) =>
-            $query->where(fn($query) =>
+            fn($query, $search) =>
+            $query->where(
+                fn($query) =>
                 $query->where('title', 'like', '%' . $search . '%')
             )
         );
 
         $query->when(
-                $filters['category'] ?? false,
-                fn($query, $category) =>
-                $query->whereHas('category', fn($query) =>
+            $filters['category'] ?? false,
+            fn($query, $category) =>
+            $query->whereHas(
+                'category',
+                fn($query) =>
                 $query->where('slug', $category)
             )
         );
 
         $query->when(
-                $filters['creator'] ?? false,
-                fn($query, $creator) =>
-                $query->whereHas('creator', fn($query) =>
+            $filters['creator'] ?? false,
+            fn($query, $creator) =>
+            $query->whereHas(
+                'creator',
+                fn($query) =>
                 $query->where('name', 'like', '%' . $creator . '%')
             )
         );
-    }
-
-    public function registrants()
-    {
-        return $this->hasMany(Registrant::class, 'event_id');
     }
 }
