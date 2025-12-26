@@ -46,16 +46,30 @@
                             @php
                                 $isRegistered = Auth::check() && $allRegistrants->contains('user_id', Auth::id());
                             @endphp
-                            @if ($isRegistered)
+                            @if ($event['status'] != 'scheduled')
                                 <span
                                     class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
-                                    Anda sudah terdaftar
+                                    Event tidak lagi tersedia
                                 </span>
                             @else
-                                <a href="{{ route('payment.show', ['event' => $event->id]) }}"
-                                    class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
-                                    Beli Tiket
-                                </a>
+                                @if ($event->creator_id == Auth::user()->id)
+                                    <span
+                                        class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
+                                        Anda adalah pembuat ini event
+                                    </span>
+                                @else
+                                    @if ($isRegistered)
+                                        <span
+                                            class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
+                                            Anda sudah terdaftar
+                                        </span>
+                                    @else
+                                        <a href="{{ route('payment.show', ['event' => $event->id]) }}"
+                                            class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
+                                            Beli Tiket
+                                        </a>
+                                    @endif
+                                @endif
                             @endif
                         </div>
                     </div>

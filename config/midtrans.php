@@ -7,4 +7,7 @@ return [
     'snap_base_url' => env('MIDTRANS_IS_PRODUCTION', false)
         ? 'https://app.midtrans.com/snap/v1/'
         : 'https://app.sandbox.midtrans.com/snap/v1/',
+    'core_api_base_url' => env('MIDTRANS_IS_PRODUCTION', false)
+        ? 'https://api.midtrans.com/v2/'
+        : 'https://api.sandbox.midtrans.com/v2/',
 ];

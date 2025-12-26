@@ -1,9 +1,9 @@
 <x-front-page.layout>
-    
+
     <x-slot:title>{{ isset($event) ? 'Edit Event' : 'Buat Event Baru' }}</x-slot:title>
 
     <div class="flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-        
+
         <div class="w-full max-w-2xl">
             <div class="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden">
 
@@ -16,69 +16,78 @@
                     </p>
                 </div>
 
-                
-                <form action="{{ isset($event) ? route('event.update', $event->id) : route('event.store') }}" method="POST" enctype="multipart/form-data">
+
+                <form action="{{ isset($event) ? route('event.update', $event->id) : route('event.store') }}"
+                    method="POST" enctype="multipart/form-data">
                     @csrf
-                    
-                    
-                    @if(isset($event))
+
+
+                    @if (isset($event))
                         @method('PUT')
                         <input type="text" name="id" value="{{ $event->id }}" class="hidden">
                     @endif
-                    
+
                     <div class="p-8 space-y-6">
 
-                        
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Nama Event</label>
                             {{-- 
                                 value="{{ $event->title ?? '' }}"
                             --}}
-                            <input type="text" name="title" value="{{ old('title', $event->title ?? '') }}" placeholder="Contoh: Konser Musik Galau Fest"
-                                   class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
-                                   @error('title')
-                                       <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                   @enderror
+                            <input type="text" name="title" value="{{ old('title', $event->title ?? '') }}"
+                                placeholder="Contoh: Konser Musik Galau Fest"
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                            @error('title')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Lokasi Event</label>
-                            <input type="text" name="location" value="{{ old('location', $event->location ?? '') }}" placeholder="Contoh: ICE BSD, Tangerang"
-                                   class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
-                                   @error('location')
-                                       <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                   @enderror
+                            <input type="text" name="location" value="{{ old('location', $event->location ?? '') }}"
+                                placeholder="Contoh: ICE BSD, Tangerang"
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                            @error('location')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Waktu Mulai</label>
-                                <input type="datetime-local" name="start_date_time" value="{{ old('start_date_time', $event->start_date_time ?? '') }}"
-                                       class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium text-sm">
-                            @error('start_date_time')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
+                                <input type="datetime-local" name="start_date_time"
+                                    value="{{ old('start_date_time', $event->start_date_time ?? '') }}"
+                                    class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium text-sm">
+                                @error('start_date_time')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Waktu Selesai</label>
-                                <input type="datetime-local" name="end_date_time" value="{{ old('end_date_time', $event->end_date_time ?? '') }}"
-                                       class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium text-sm">
-                            @error('end_date_time')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
+                                <input type="datetime-local" name="end_date_time"
+                                    value="{{ old('end_date_time', $event->end_date_time ?? '') }}"
+                                    class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium text-sm">
+                                @error('end_date_time')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
-                        
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Kategori Event</label>
-                            <select name="category" class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium bg-white">
-                                <option value="" disabled {{ !isset($event) ? 'selected' : '' }}>Pilih Kategori...</option>
+                            <select name="category"
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium bg-white">
+                                <option value="" disabled {{ !isset($event) ? 'selected' : '' }}>Pilih
+                                    Kategori...</option>
                                 {{-- Contoh Logika Selected untuk Edit --}}
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category', isset($event) && $event->category_id == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category', isset($event) && $event->category_id == $category->id) ? 'selected' : '' }}>
+                                        {{ $category->name }}</option>
                                 @endforeach
                             </select>
                             @error('category')
@@ -86,54 +95,70 @@
                             @enderror
                         </div>
 
-                    
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Harga Tiket (IDR)</label>
-                            <input type="number" name="price" value="{{ old('price', $event->price ?? '') }}" placeholder="0 (Isi 0 jika gratis)"
-                            class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
-                        <p class="text-xs text-gray-400 mt-1 ml-1">Masukkan angka saja (Contoh: 50000).</p>
-                        @error('price')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                            <input type="number" name="price" value="{{ old('price', $event->price ?? '') }}"
+                                placeholder="0 (Isi 0 jika gratis)"
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                            <p class="text-xs text-gray-400 mt-1 ml-1">Masukkan angka saja (Contoh: 50000).</p>
+                            @error('price')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                        
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Deskripsi Lengkap</label>
                             <textarea name="description" rows="5" placeholder="Jelaskan detail event..."
-                                      class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium resize-none">{{ old('description', $event->description ?? '') }}</textarea>
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium resize-none">{{ old('description', $event->description ?? '') }}</textarea>
                         </div>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                         <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Ganti Foto Profil</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Ganti Foto Profil</label>
 
-                                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-blue-50 hover:border-blue-400 transition-all group">
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg class="w-8 h-8 mb-2 text-gray-400 group-hover:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                        </svg>
-                                        <p class="text-sm text-gray-500 group-hover:text-blue-600 font-semibold">Klik untuk pilih foto</p>
-                                        <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (Max. 2MB)</p>
-                                    </div>
-                                    <input type="file" name="image_path" class="hidden" readonly/>
-                                </label>
-                                <div class="flex space-x-4">
-                                    <p name="imgPlaceholder" id="imgPlaceholder">No file chosen</p>
-                                    @error('image_path')
-                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                                    @enderror
+                            <label
+                                class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-blue-50 hover:border-blue-400 transition-all group">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-2 text-gray-400 group-hover:text-blue-500 transition-colors"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="text-sm text-gray-500 group-hover:text-blue-600 font-semibold">Klik untuk
+                                        pilih foto</p>
+                                    <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (Max. 2MB)</p>
                                 </div>
+                                <input type="file" name="image_path" class="hidden" readonly />
+                            </label>
+                            <div class="flex space-x-4">
+                                <p name="imgPlaceholder" id="imgPlaceholder">No file chosen</p>
+                                @error('image_path')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
-                            <div>
-                                @if (isset($event) && $event->status)
+                        </div>
+                        <div>
+                            @if (isset($event) && $event->status)
                                 <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Status event</label>
-                                @endif
-                            <select name="status" class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium bg-white {{ isset($event) && $event->status ? '' : 'hidden' }}">
-                                <option value="scheduled" {{ old('status',isset($event) && $event->status ? 'selected' : '') }}>Scheduled</option>
-                                <option value="ongoing" {{ old('status',isset($event) && $event->status == 'ongoing' ? 'selected' : '') }}>Ongoing</option>
-                                <option value="completed" {{ old('status',isset($event) && $event->status == 'completed' ? 'selected' : '') }}>Completed</option>
-                                <option value="cancelled" {{ old('status',isset($event) && $event->status == 'cancelled' ? 'selected' : '') }}>Cancelled</option>
+                            @endif
+                            <select name="status"
+                                class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium bg-white {{ isset($event) && $event->status ? '' : 'hidden' }}">
+                                <option value="scheduled"
+                                    {{ old('status', isset($event) && $event->status ? 'selected' : '') }}>Scheduled
+                                </option>
+                                <option value="ongoing"
+                                    {{ old('status', isset($event) && $event->status == 'ongoing' ? 'selected' : '') }}>
+                                    Ongoing</option>
+                                <option value="completed"
+                                    {{ old('status', isset($event) && $event->status == 'completed' ? 'selected' : '') }}>
+                                    Completed</option>
+                                <option value="cancelled"
+                                    {{ old('status', isset($event) && $event->status == 'cancelled' ? 'selected' : '') }}>
+                                    Cancelled</option>
                             </select>
                             @error('status')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -141,10 +166,12 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-4 px-8 py-6 border-t border-gray-100 bg-gray-50">
-                        <button type="button" class="px-6 py-3 rounded-lg text-base font-bold text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition-colors">
+                        <a href="{{ route('event.index') }}" type="button"
+                            class="px-6 py-3 rounded-lg text-base font-bold text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition-colors">
                             Batal
-                        </button>
-                        <button type="submit" class="px-8 py-3 rounded-lg text-base font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
+                        </a>
+                        <button type="submit"
+                            class="px-8 py-3 rounded-lg text-base font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
                             {{ isset($event) ? 'Simpan Perubahan' : 'Buat Event Sekarang' }}
                         </button>
                     </div>
@@ -154,16 +181,16 @@
             </div>
         </div>
     </div>
-<script>
-    const photoInput = document.querySelector('input[name="image_path"]');
-    const imgPlaceholder = document.getElementById('imgPlaceholder');
+    <script>
+        const photoInput = document.querySelector('input[name="image_path"]');
+        const imgPlaceholder = document.getElementById('imgPlaceholder');
 
-    photoInput.addEventListener('change', function() {
-        if (this.files && this.files.length > 0) {
-            imgPlaceholder.textContent = this.files[0].name;
-        } else {
-            imgPlaceholder.textContent = 'No file chosen';
-        }
-    });
-</script>
+        photoInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                imgPlaceholder.textContent = this.files[0].name;
+            } else {
+                imgPlaceholder.textContent = 'No file chosen';
+            }
+        });
+    </script>
 </x-front-page.layout>

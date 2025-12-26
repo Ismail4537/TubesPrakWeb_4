@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Transaction;
+use App\Models\Registrant;
 use Illuminate\Support\Facades\DB;
 use App\Services\Billing\MidtransService;
 use Illuminate\Http\Request;
@@ -52,7 +54,11 @@ class PaymentController extends Controller
         }
 
         try {
-            $result = $midtrans->createSnapTransaction($event, Auth::user(), $amount);
+            $finishUrl = $request->getSchemeAndHttpHost() . route('payment.finish', [], false);
+            $result = $midtrans->createSnapTransaction($event, Auth::user(), $amount, $finishUrl);
+
+            // Backup for cases where Midtrans redirect doesn't include query params as expected
+            $request->session()->put('midtrans_last_order_id', $result['order_id'] ?? null);
             return Response::json($result, 201);
         } catch (\Throwable $e) {
             return Response::json([
@@ -70,14 +76,47 @@ class PaymentController extends Controller
 
     public function result(Event $event, Request $request)
     {
-        $status = (string) $request->query('status', 'success');
         $orderId = $request->query('order_id');
 
         return view('front-page.payment-result', [
             'title' => 'Payment Result',
             'event' => $event,
-            'status' => $status,
             'orderId' => $orderId,
         ]);
+    }
+
+    public function finish(Request $request)
+    {
+        $orderId = $request->query('order_id') ?: $request->session()->get('midtrans_last_order_id');
+        $transactionStatus = $request->query('transaction_status');
+
+        $event = null;
+        if ($orderId) {
+            if (in_array((string) $transactionStatus, ['capture', 'settlement', 'pending'], true)) {
+                try {
+                    app(MidtransService::class)->syncLocalTransactionFromMidtrans((string) $orderId);
+                } catch (\Throwable $e) {
+                    return redirect()->route('payment.result', [
+                        'event' => $event ? $event->id : null,
+                        'order_id' => $orderId,
+                    ]);
+                }
+            }
+
+            $txn = Transaction::where('order_id', $orderId)->first();
+            if ($txn) {
+                $event = Event::find($txn->event_id);
+                if ($event) {
+                    Registrant::create([
+                        'user_id' => $txn->payer_user_id,
+                        'event_id' => $txn->event_id,
+                    ]);
+                    return redirect()->route('payment.result', [
+                        'event' => $event->id,
+                        'order_id' => $orderId,
+                    ]);
+                }
+            }
+        }
     }
 }

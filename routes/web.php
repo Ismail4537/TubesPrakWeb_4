@@ -99,4 +99,5 @@ Route::get('/reports/events/pdf/view', [EventReportController::class, 'viewPDF']
 Route::get('/payment/event/{event}', [PaymentController::class, 'show'])->middleware('auth')->name('payment.show');
 Route::post('/payment/event/{event}', [PaymentController::class, 'create'])->middleware('auth')->name('payment.create');
 Route::get('/payment/result/event/{event}', [PaymentController::class, 'result'])->middleware('auth')->name('payment.result');
+Route::get('/payment/result', [PaymentController::class, 'finish'])->middleware('auth')->name('payment.finish');
 // Notification handled via API route (no CSRF)

@@ -96,12 +96,14 @@
                     throw new Error('Token Snap tidak tersedia');
                 }
 
+                const createdOrderId = data.order_id || '';
+
                 window.snap.pay(data.token, {
                     onSuccess: function(result) {
                         setStatus('Pembayaran berhasil. Terima kasih!', 'success');
                         setTimeout(() => {
-                            const orderId = result && result.order_id ? result.order_id :
-                            '';
+                            const orderId = (result && result.order_id ? result.order_id :
+                                createdOrderId) || '';
                             const qs = 'status=success' + (orderId ? ('&order_id=' +
                                 encodeURIComponent(orderId)) : '');
                             window.location.href = resultBaseUrl + '?' + qs;
@@ -110,8 +112,8 @@
                     onPending: function(result) {
                         setStatus('Pembayaran pending. Silakan selesaikan.', 'info');
                         setTimeout(() => {
-                            const orderId = result && result.order_id ? result.order_id :
-                            '';
+                            const orderId = (result && result.order_id ? result.order_id :
+                                createdOrderId) || '';
                             const qs = 'status=pending' + (orderId ? ('&order_id=' +
                                 encodeURIComponent(orderId)) : '');
                             window.location.href = resultBaseUrl + '?' + qs;
@@ -121,8 +123,8 @@
                         console.error(result);
                         setStatus('Terjadi kesalahan pembayaran.', 'error');
                         setTimeout(() => {
-                            const orderId = result && result.order_id ? result.order_id :
-                            '';
+                            const orderId = (result && result.order_id ? result.order_id :
+                                createdOrderId) || '';
                             const qs = 'status=failed' + (orderId ? ('&order_id=' +
                                 encodeURIComponent(orderId)) : '');
                             window.location.href = resultBaseUrl + '?' + qs;

@@ -55,16 +55,30 @@
                             <?php
                                 $isRegistered = Auth::check() && $allRegistrants->contains('user_id', Auth::id());
                             ?>
-                            <?php if($isRegistered): ?>
+                            <?php if($event['status'] != 'scheduled'): ?>
                                 <span
                                     class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
-                                    Anda sudah terdaftar
+                                    Event tidak lagi tersedia
                                 </span>
                             <?php else: ?>
-                                <a href="<?php echo e(route('payment.show', ['event' => $event->id])); ?>"
-                                    class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
-                                    Beli Tiket
-                                </a>
+                                <?php if($event->creator_id == Auth::user()->id): ?>
+                                    <span
+                                        class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
+                                        Anda adalah pembuat ini event
+                                    </span>
+                                <?php else: ?>
+                                    <?php if($isRegistered): ?>
+                                        <span
+                                            class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
+                                            Anda sudah terdaftar
+                                        </span>
+                                    <?php else: ?>
+                                        <a href="<?php echo e(route('payment.show', ['event' => $event->id])); ?>"
+                                            class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
+                                            Beli Tiket
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
