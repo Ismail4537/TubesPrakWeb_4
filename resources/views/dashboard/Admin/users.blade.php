@@ -1,120 +1,152 @@
 <x-back-page.layout>
     <x-slot:title> {{ $title }} </x-slot:title>
-    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
 
-        <div class="p-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="relative w-full max-w-sm">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+    <div class="max-w-6xl mx-auto">
+        {{-- Header: Search & Filter --}}
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div class="flex flex-1 items-center gap-2 max-w-2xl">
+                {{-- Search Bar --}}
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                    </div>
-                    <input id="searchUsers" type="text" placeholder="Search"
-                        class="block w-full ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
+                    </span>
+                    <input id="searchUsers" type="text" placeholder="Cari user..."
+                        class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
+                </div>
+
+                {{-- Filter Role --}}
+                <div class="shrink-0">
+                    <select id="filterRole"
+                        class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm">
+                        <option value="">Semua Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
                 </div>
             </div>
 
-            <select id="filterRole"
-                class="px-3 py-2 bg-neutral-secondary-medium border border-default-medium rounded-base text-sm">
-                <option value="">Semua Role</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-            </select>
-
+            {{-- Optional: Kalau mau nambah tombol Create User, taruh disini. Kalau gak ada, biarin kosong atau hapus div ini --}}
+            {{-- <div class="shrink-0"></div> --}}
         </div>
 
-        <table class="w-full text-sm text-left text-body">
-            <thead class="bg-neutral-secondary-medium border-b border-default-medium">
-                <tr>
-                    <th class="px-6 py-3 font-medium text-center">No</th>
-                    <th class="px-6 py-3 font-medium">Nama</th>
-                    <th class="px-6 py-3 font-medium">Email</th>
-                    <th class="px-6 py-3 font-medium">Nomor Telepon</th>
-                    <th class="px-6 py-3 font-medium">Tanggal Lahir</th>
-                    <th class="px-6 py-3 font-medium">Profile Photo</th>
-                    <th class="px-6 py-3 font-medium">Role</th>
-                    <th class="px-6 py-3 font-medium text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody">
+        {{-- Table Container --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Email</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No. Telp</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Role</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody" class="divide-y divide-gray-200 text-sm">
+                        @forelse ($users ?? [] as $index => $user)
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 text-gray-600">{{ $index + 1 }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $user->phone ?? '-' }}</td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    {{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{-- Badge Style untuk Role biar mirip Status Event --}}
+                                    @php
+                                        $role = strtolower($user->role ?? 'user');
+                                        $roleClass = $role === 'admin' 
+                                            ? 'bg-purple-100 text-purple-700' 
+                                            : 'bg-blue-100 text-blue-700';
+                                    @endphp
+                                    <span class="px-2 py-1 {{ $roleClass }} rounded-full text-[10px] font-bold uppercase">
+                                        {{ $user->role ?? 'User' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center gap-3">
+                                        <a href="{{ route('dashboard.users.edit', $user->id) }}"
+                                            class="text-blue-500 font-medium hover:underline">Edit</a>
 
+                                        <form action="{{ route('dashboard.users.destroy', $user->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin hapus user ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-red-600 font-medium hover:underline">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td class="px-6 py-8 text-center text-gray-500" colspan="7">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-sm">Tidak ada data pengguna.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-                @forelse($users ?? [] as $index => $user)
-                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
-                        <td class="px-6 py-4">{{ $user->name }}</td>
-                        <td class="px-6 py-4">{{ $user->email }}</td>
-                        <td class="px-6 py-4">{{ $user->phone ?? '-' }}</td>
-                        <td class="px-6 py-4">{{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}</td>
-                        <td class="px-6 py-4">{{ $user->profile_photo_path ?? '-' }}</td>
-                        <td class="px-6 py-4">{{ $user->role ?? 'User' }}</td>
+            {{-- Pagination --}}
+            <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="hidden sm:flex flex-1 items-center">
+                    <p class="text-sm text-gray-600">
+                        Menampilkan <span class="font-medium">1</span> sampai <span
+                            class="font-medium">{{ count($users ?? []) }}</span> hasil
+                    </p>
+                </div>
 
-                        <!-- Aksi -->
-                        <td class="px-6 py-4 text-center">
-                            <a href="{{ route('dashboard.users.edit', $user->id) }}"
-                                class="text-brand font-medium hover:underline mr-4">Update</a>
-
-                            <form action="{{ route('dashboard.users.destroy', $user->id) }}" method="POST"
-                                class="inline" onsubmit="return confirm('Yakin hapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 font-medium hover:underline">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="8" class="px-6 py-4 text-center">Tidak ada data pengguna.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        @if($users->hasPages())
+                @if($users->hasPages())
                 <div class="flex flex-1 justify-between sm:justify-end gap-2">
                     @if($users->onFirstPage())
-                    <button
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Previous
                     </button>
                     @else
-                    <a href="{{ $users->previousPageUrl() }}"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <a href="{{ $users->previousPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Previous
                     </a>
                     @endif
+
                     <div class="hidden md:flex gap-1">
-                        @foreach($users->getUrlRange (1, $users->lastPage()) as $page => $url)
-                        @if($page == $users->currentPage())
-                            <a href="{{ $url}}"
-                            class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</a>
-                        @else
-                            <a href="{{ $url}}"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
-                        @endif
+                        @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                            @if($page == $users->currentPage())
+                                <span class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
+                            @endif
                         @endforeach
                     </div>
+
                     @if($users->hasMorePages())
-                    <a href="{{ $users->nextPageUrl() }}"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <a href="{{ $users->nextPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Next
                     </a>
                     @else
-                    <button
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Next
                     </button>
                     @endif
                 </div>
                 @endif
+            </div>
+        </div>
     </div>
 
     @push('scripts')
         <script>
             (function() {
+                // Debounce Function
                 function debounce(fn, delay = 300) {
                     let t;
                     return (...args) => {
@@ -142,14 +174,16 @@
                     try {
                         const res = await fetch(`${url}?${params.toString()}`);
                         const data = await res.json();
-                        tbody.innerHTML = data.html;
+                        // Pastikan backend mengembalikan view partial yang sesuai dengan struktur tabel baru (tr > td)
+                        tbody.innerHTML = data.html; 
                     } catch (e) {
                         tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="text-center text-red-500 py-4">
-                        Gagal memuat data
-                    </td>
-                </tr>`;
+                            <tr>
+                                <td colspan="7" class="px-6 py-6 text-center text-red-500">
+                                    Gagal memuat data
+                                </td>
+                            </tr>
+                        `;
                     }
                 });
 
@@ -158,5 +192,4 @@
             })();
         </script>
     @endpush
-
 </x-back-page.layout>
