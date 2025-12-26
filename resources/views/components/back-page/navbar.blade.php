@@ -44,7 +44,12 @@
                         <p class="text-xs text-gray-500">{{ Auth::user()->role }}</p>
                     </div>
                     <div class="float-end ml-auto">
-                        <svg class="w-7 h-7 hover:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" /></svg>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="text-gray-400 hover:text-white" title="Logout">
+                               <svg class="w-7 h-7 hover:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" /></svg>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
