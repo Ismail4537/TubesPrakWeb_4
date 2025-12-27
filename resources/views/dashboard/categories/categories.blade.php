@@ -18,7 +18,6 @@
                 </div>
             </div>
 
-            {{-- Create Button --}}
             <a href="{{ route('dashboard.categories.create') }}"
                 class="shrink-0 flex items-center gap-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-400 transition shadow-sm text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +28,6 @@
             </a>
         </div>
 
-        {{-- Table Container --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -41,13 +39,11 @@
                         </tr>
                     </thead>
                     <tbody id="categoriesTableBody" class="divide-y divide-gray-200 text-sm">
-                        {{-- INCLUDE PARTIAL --}}
                         @include('dashboard.categories._categories_rows')
                     </tbody>
                 </table>
             </div>
 
-            {{-- Pagination --}}
             <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <div class="hidden sm:flex flex-1 items-center">
                     <p class="text-sm text-gray-600">

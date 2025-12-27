@@ -17,7 +17,6 @@
                         class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
                 </div>
 
-                {{-- Filter Role --}}
                 <div class="shrink-0">
                     <select id="filterRole"
                         class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm">
@@ -28,7 +27,6 @@
                 </div>
             </div>
 
-            {{-- Optional: Kalau mau nambah tombol Create User, taruh disini. Kalau gak ada, biarin kosong atau hapus div ini --}}
             {{-- <div class="shrink-0"></div> --}}
         </div>
 
@@ -58,7 +56,6 @@
                                     {{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{-- Badge Style untuk Role biar mirip Status Event --}}
                                     @php
                                         $role = strtolower($user->role ?? 'user');
                                         $roleClass = $role === 'admin' 
@@ -97,7 +94,6 @@
                 </table>
             </div>
 
-            {{-- Pagination --}}
             <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <div class="hidden sm:flex flex-1 items-center">
                     <p class="text-sm text-gray-600">
@@ -146,7 +142,6 @@
     @push('scripts')
         <script>
             (function() {
-                // Debounce Function
                 function debounce(fn, delay = 300) {
                     let t;
                     return (...args) => {
@@ -174,7 +169,6 @@
                     try {
                         const res = await fetch(`${url}?${params.toString()}`);
                         const data = await res.json();
-                        // Pastikan backend mengembalikan view partial yang sesuai dengan struktur tabel baru (tr > td)
                         tbody.innerHTML = data.html; 
                     } catch (e) {
                         tbody.innerHTML = `
