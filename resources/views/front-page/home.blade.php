@@ -33,7 +33,6 @@
                 class="flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-200 shadow-sm focus:outline-none"
             >
                 <span class="text-lg">🏆</span>
-                <span class="font-medium text-sm text-gray-700">Sorotan</span>
                 <span :class="activeTab === 'Sorotan' ? '' : 'hidden'" class="font-medium text-sm text-gray-700">Sorotan</span>
             </button>
 
@@ -43,7 +42,7 @@
                 class="flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-200 shadow-sm focus:outline-none"
             >
                 <span class="text-lg text-red-500">🔥</span>
-                <span class="font-medium text-sm text-gray-700">Populer</span>
+                <span :class="activeTab === 'Populer' ? '' : 'hidden'" class="font-medium text-sm text-gray-700">Populer</span>
             </button>
 
             <button 
@@ -52,7 +51,7 @@
                 class="flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-200 shadow-sm focus:outline-none"
             >
                 <span class="text-lg text-yellow-500">✨</span>
-                <span class="font-medium text-sm text-gray-700">Terbaru</span>
+                <span :class="activeTab === 'Terbaru' ? '' : 'hidden'" class="font-medium text-sm text-gray-700">Terbaru</span>
             </button>
 
             <button 
@@ -61,7 +60,7 @@
                 class="flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-200 shadow-sm focus:outline-none"
             >
                 <span class="inline-flex items-center justify-center w-6 h-6 bg-teal-500 text-white text-[10px] font-bold rounded-md uppercase">Free</span>
-                <span class="font-medium text-sm text-gray-700">Gratis</span>
+                <span :class="activeTab === 'Gratis' ? '' : 'hidden'" class="font-medium text-sm text-gray-700">Gratis</span>
             </button>
 
         </div>

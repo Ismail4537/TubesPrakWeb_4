@@ -28,10 +28,14 @@ Route::get('/profile/edit', [ProfileController::class, 'edit'])->middleware('aut
 Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 Route::get('/contac', [ContacController::class, 'index'])->name('contac');
+// Live search (front) for contacts
+Route::get('/contac/search', [ContacController::class, 'search'])->name('contac.search');
 Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show');
 
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
+// Live search (front)
+Route::get('event/search', [EventController::class, 'search'])->name('event.search');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
 Route::get('event/show/{slug}', [EventController::class, 'show'])->middleware('auth')->name('event.show');
 Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('auth')->name('event.edit');
@@ -39,6 +43,8 @@ Route::get('event/create', [EventController::class, 'create'])->middleware('auth
 Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
 Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
 Route::delete('event/delete/{id}', [EventController::class, 'destroy'])->middleware('auth')->name('event.destroy');
+Route::get('event/payment/{slug}', [EventController::class, 'showPaymentEvent'])->middleware('auth')->name('event.payment');
+Route::post('event/payment/{slug}', [EventController::class, 'processPayment'])->middleware('auth')->name('event.payment.process');
 
 Route::get('/dashboard', function () {
     return view('dashboard.home', ['title' => 'Dashboard']);

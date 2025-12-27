@@ -1,198 +1,136 @@
 <x-back-page.layout>
     <x-slot:title> {{ $title }} </x-slot:title>
-    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-        <!-- Search, Create, Filter -->
-        <div class="p-4 flex items-center justify-between">
 
-            <!-- Search + Create -->
-            <div class="flex items-center space-x-3">
-
-                <!-- Search bar -->
-                <div class="relative w-full max-w-sm">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+    <div class="max-w-6xl mx-auto">
+        {{-- Header: Search & Create --}}
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div class="flex flex-1 items-center gap-2 max-w-2xl">
+                {{-- Search Bar --}}
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                    </div>
-                    <input id="searchCategory" type="text" placeholder="Search"
-                        class="block w-full ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium
-                       text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
+                    </span>
+                    <input id="searchCategory" type="text" placeholder="Search..."
+                        class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
                 </div>
-
-                <!-- Create Button -->
-                <a href="{{ route('dashboard.categories.create') }}"
-                    class="px-4 py-2 bg-brand text-black rounded-base shadow hover:bg-brand-dark text-sm">
-                    Create
-                </a>
-
-
-
             </div>
 
-            <!-- Filter Button --
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="shrink-0 flex items-center text-body bg-neutral-secondary-medium border border-default-medium
-               px-3 py-2 rounded-base hover:bg-neutral-tertiary-medium hover:text-heading text-sm">
-                Filter
-                <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 9-7 7-7-7" />
+            {{-- Create Button --}}
+            <a href="{{ route('dashboard.categories.create') }}"
+                class="shrink-0 flex items-center gap-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-400 transition shadow-sm text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-            </button -->
-
-            <!-- Dropdown -->
-            <div id="dropdown"
-                class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-32">
-                <ul class="p-2 text-sm text-body font-medium">
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Role</a></li>
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Tanggal</a></li>
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Email</a></li>
-                </ul>
-            </div>
+                <span class="hidden sm:inline">Create</span>
+                <span class="sm:hidden">Add</span>
+            </a>
         </div>
 
-        <!-- TABLE -->
-        <table class="w-full text-sm text-left text-body">
-            <thead class="bg-neutral-secondary-medium border-b border-default-medium">
-                <tr>
-                    <th class="px-6 py-3 font-medium text-center">No</th>
-                    <th class="px-6 py-3 font-medium">Nama</th>
+        {{-- Table Container --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody" class="divide-y divide-gray-200 text-sm">
+                        {{-- INCLUDE PARTIAL --}}
+                        @include('dashboard.categories._categories_rows')
+                    </tbody>
+                </table>
+            </div>
 
-                    <!-- Tambahan kolom AKSI -->
-                    <th class="px-6 py-3 font-medium text-center">Aksi</th>
-                </tr>
-            </thead>
+            {{-- Pagination --}}
+            <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="hidden sm:flex flex-1 items-center">
+                    <p class="text-sm text-gray-600">
+                        Menampilkan <span class="font-medium">{{ $categories->firstItem() ?? 0 }}</span> sampai 
+                        <span class="font-medium">{{ $categories->lastItem() ?? 0 }}</span> dari 
+                        <span class="font-medium">{{ $categories->total() ?? 0 }}</span> hasil
+                    </p>
+                </div>
 
-            <tbody id="categoriesTableBody">
-
-
-                @foreach ($categories as $index => $category)
-                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
-
-                        <td class="px-6 py-4">{{ $category->name }}</td>
-
-                        <!-- Aksi -->
-                        <td class="px-6 py-4 text-center">
-                            <a href="{{ route('categories.edit', $category->id) }}"
-                                class="text-brand font-medium hover:underline mr-4">
-                                Update
-                            </a>
-
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                class="inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="text-red-600 font-medium hover:underline"
-                                    onclick="return confirm('Yakin hapus?')">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-
-
-                </tr>
-            </tbody>
-        </table>
-
-        @if($categories->hasPages())
+                @if($categories->hasPages())
                 <div class="flex flex-1 justify-between sm:justify-end gap-2">
                     @if($categories->onFirstPage())
-                    <button
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition" disabled>
                         Previous
                     </button>
                     @else
-                    <a href="{{ $categories->previousPageUrl() }}"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <a href="{{ $categories->previousPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Previous
                     </a>
                     @endif
+
                     <div class="hidden md:flex gap-1">
-                        @foreach($categories->getUrlRange (1, $categories->lastPage()) as $page => $url)
-                        @if($page == $categories->currentPage())
-                            <a href="{{ $url}}"
-                            class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</a>
-                        @else
-                            <a href="{{ $url}}"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
-                        @endif
+                        @foreach($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
+                            @if($page == $categories->currentPage())
+                                <span class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
+                            @endif
                         @endforeach
                     </div>
+
                     @if($categories->hasMorePages())
-                    <a href="{{ $categories->nextPageUrl() }}"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <a href="{{ $categories->nextPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Next
                     </a>
                     @else
-                    <button
-                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition" disabled>
                         Next
                     </button>
                     @endif
                 </div>
                 @endif
+            </div>
+        </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const input = document.getElementById('searchCategory');
-            const tableBody = document.getElementById('categoryTableBody');
 
-            let timer = null;
-
-            input.addEventListener('keyup', function() {
-                clearTimeout(timer);
-
-                timer = setTimeout(() => {
-                    fetch(`{{ route('dashboard.categories.search') }}?q=${this.value}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            tableBody.innerHTML = data.html;
-                        });
-                }, 300); // debounce
-            });
-        });
-    </script>
     @push('scripts')
         <script>
             (function() {
-                const input = document.getElementById('searchCategory');
-                const tbody = document.getElementById('categoriesTableBody');
+                const searchInput = document.getElementById('searchCategory');
+                const tableBody = document.getElementById('categoriesTableBody');
                 const fetchUrl = "{{ route('dashboard.categories.search') }}";
 
-                if (!input || !tbody) return;
+                let debounceTimer;
 
-                let timer;
+                function debounceSearch() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(fetchData, 300);
+                }
 
-                input.addEventListener('input', function() {
-                    clearTimeout(timer);
+                async function fetchData() {
+                    const q = searchInput.value.trim();
+                    const params = new URLSearchParams({ q });
 
-                    timer = setTimeout(async () => {
-                        const q = input.value.trim();
+                    try {
+                        const res = await fetch(`${fetchUrl}?${params}`);
+                        const data = await res.json();
+                        tableBody.innerHTML = data.html;
+                    } catch (e) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="px-6 py-6 text-center text-red-500">
+                                    Gagal memuat data
+                                </td>
+                            </tr>
+                        `;
+                    }
+                }
 
-                        try {
-                            const res = await fetch(`${fetchUrl}?q=${encodeURIComponent(q)}`);
-                            const data = await res.json();
-                            tbody.innerHTML = data.html;
-                        } catch (e) {
-                            tbody.innerHTML = `
-                    <tr>
-                        <td colspan="3" class="px-6 py-4 text-center text-red-500">
-                            Gagal memuat data
-                        </td>
-                    </tr>
-                `;
-                        }
-                    }, 300);
-                });
+                if(searchInput) {
+                    searchInput.addEventListener('input', debounceSearch);
+                }
             })();
         </script>
     @endpush
-
-
 </x-back-page.layout>

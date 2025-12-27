@@ -58,7 +58,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <!-- User Reporting Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200">
+            <div class="bg-linier-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200">
                 <div class="flex items-start justify-between mb-4">
                     <div class="p-3 bg-white rounded-lg shadow-sm">
                         <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Event Reporting Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200">
+            <div class="bg-linier-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200">
                 <div class="flex items-start justify-between mb-4">
                     <div class="p-3 bg-white rounded-lg shadow-sm">
                         <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@
             </div>
 
             <!-- Category Reporting Card (Coming Soon) -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200 opacity-60">
+            <div class="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm p-6 border border-blue-200 opacity-60">
                 <div class="flex items-start justify-between mb-4">
                     <div class="p-3 bg-white rounded-lg shadow-sm">
                         <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

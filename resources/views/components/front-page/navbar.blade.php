@@ -50,6 +50,7 @@
                 </div>
 
                 <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                <a href="{{ route('event.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Create Event</a>
                 
                 @if(Auth::user()->role === 'admin')
                 <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Dashboard Admin</a>
@@ -116,9 +117,13 @@
 
           <div class="mt-3 space-y-1 px-2">
 
-              <a href="/dashboard"
+              <a href="{{ route('profile') }}"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">
-                  Dashboard
+                  Profile
+              </a>
+              <a href="{{ route('event.create') }}"
+                  class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">
+                  Create Event
               </a>
 
               <form action="{{ route('logout') }}" method="POST">

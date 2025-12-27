@@ -1,66 +1,81 @@
 <x-front-page.layout>
-<x-slot:title> {{$title}} </x-slot:title>
-        <div class="flex flex-col md:flex-row md:items-center mb-6 space-y-4 space-x-4 md:space-y-0">
-            <h1 class="text-3xl font-bold text-gray-800">
-                List Contacts
-            </h1>
+    <x-slot:title> {{ $title }} </x-slot:title>
+    <div class="flex flex-col md:flex-row md:items-center mb-6 space-y-4 space-x-4 md:space-y-0">
+        <h1 class="text-3xl font-bold text-gray-800">
+            List Contacts
+        </h1>
 
-            <div class="w-full md:w-1/3">
-                <form action="{{ route('event.index') }}" method="GET" class="relative">
-                    <input type="text" name="search" placeholder="Cari Event, Lokasi, atau Kategori..." class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}">
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </form>
-            </div>
+        <div class="w-full md:w-1/3">
+            <form action="{{ route('contac') }}" method="GET" class="relative" id="contac-search-form">
+                <input id="search-contact" type="text" name="search" placeholder="Cari kontak (nama atau email)"
+                    class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value="{{ request('search') }}">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </form>
         </div>
-    <div class="p-4 grid grid-cols-2 gap-2 justify-items-center md:grid-cols-3 lg:grid-cols-5 lg:gap-6.5">
-        @foreach ($listContact as $contact)
-            <a href="{{ route('contac.show', ['id' => $contact->id]) }}" class="my-4 shrink-0 w-48 ">
-                <div class="p-2 flex flex-col items-center w-full max-w-xs rounded-xl overflow-hidden h-full">
-                    <img src="{{ asset($contact->profile_photo_path ?? 'https://ui-avatars.com/api/?name='.$contact->name) }}" alt="gambar" class="w-35 h-35 rounded-full object-cover mb-4">
-                    <h2 class="text-md font-medium text-gray-900 text-center">{{ $contact->name }}</h2>
-                </div>
-            </a>
-        @endforeach
     </div>
-{{-- pagination --}}
-@if($listContact->hasPages())
-    <div class="px-6 py-4 border-t border-gray-208">
-        <nav aria-label="Page navigation">
-            <ul class="flex-space-x-px text-sm">
-                {{-- Previous Button --}}
-                @if($listContact->onFirstPage())
-                    <li>
-                        <span class="flex items-center justify-center text-gray-400 bg-gray-108 box-border border border-gray-300 cursor-not-allowed font-medium rounded-s-base text-sm px-3 h-18">Previous</span>
-                    </li>
-                @else
-                    <li>
-                        <a href="{{ $listContact->previousPageUrl() }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover: text-heading font-medium rounded-s-base text-sm px-3 h-18 focus:outline-none">Previous</a>
-                    </li>
-                @endif
-                {{-- Page Numbers --}}
-                @foreach($listContact->getUrlRange (1, $listContact->lastPage()) as $page => $url)
-                    @if($page == $listContact->currentPage())
-                        <li>
-                            <a href="{{ $url}}" aria-current="page" class="flex items-center justify-center text-fg-brand bg-neutral-tertiary-medium box-border border border-default-medium hover: text-fg-brand font-medium text-sm w-10 h-10 focus:outline-none">{{ $page }}</a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="{{ $url }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover: text-heading font-medium text-sm w-18 h-18 focus: outline-none"> {{ $page }}</a>
-                        </li>
-                    @endif
-                @endforeach
-                {{-- Next Button --}}
-                @if($listContact->hasMorePages())
-                    <li>
-                        <a href="{{ $listContact->nextPageUrl() }}" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover: text-heading font-medium rounded-e-base text-sm px-3 h-18 focus:outline-none">Next</a>
-                    </li>
-                @else
-                    <li>
-                        <span class="flex items-center justify-center text-gray-400 bg-gray-108 box-border border border-gray-300 cursor-not-allowed font-medium rounded-e-base text-sm px-3 h-16">Next</span>
-                    </li>
-                @endif
-            </ul>
-        </nav>
+    <div id="contac-grid"
+        class="p-4 grid grid-cols-2 gap-2 justify-items-center md:grid-cols-3 lg:grid-cols-5 lg:gap-6.5">
+        @include('front-page.contac.partials.cards', ['contacts' => $listContact])
     </div>
-@endif
+    {{-- pagination --}}
+    <div id="contac-pagination">
+        @include('front-page.event.partials.pagination', ['paginator' => $listContact])
+    </div>
+
+    <script>
+        (function() {
+            const input = document.getElementById('search-contact');
+            const grid = document.getElementById('contac-grid');
+            const pagination = document.getElementById('contac-pagination');
+            const form = document.getElementById('contac-search-form');
+
+            if (!input || !grid || !pagination || !form) return;
+
+            let timer;
+            const debounce = (fn, delay = 300) => {
+                clearTimeout(timer);
+                timer = setTimeout(fn, delay);
+            };
+
+            const fetchResults = (page = null) => {
+                const params = new URLSearchParams();
+                if (input.value) params.set('q', input.value);
+                if (page) params.set('page', page);
+
+                fetch(`{{ route('contac.search') }}?` + params.toString(), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        grid.innerHTML = data.html;
+                        pagination.innerHTML = data.pagination || '';
+                    })
+                    .catch(() => {});
+            };
+
+            input.addEventListener('input', () => debounce(fetchResults));
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                fetchResults(1);
+            });
+
+            pagination.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (!a) return;
+                const url = new URL(a.href, window.location.origin);
+                const pageParam = url.searchParams.get('page') || null;
+                if (pageParam) {
+                    e.preventDefault();
+                    fetchResults(pageParam);
+                }
+            });
+        })();
+    </script>
 </x-front-page.layout>

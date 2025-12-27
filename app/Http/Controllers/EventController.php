@@ -21,14 +21,97 @@ class EventController extends Controller
         return $event;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // Panggil prepareEventData untuk setiap item
-        // $listevent = array_map([$this, 'prepareEventData'], $this->events);
         $categories = Category::all();
-        $listevent = Event::with(['creator', 'category'])->get();
-        $listevent = Event::paginate(12)->withQueryString();
-        return view('front-page.event.index', ['listevent' => $listevent, 'categories' => $categories], ['title' => 'List Event']);
+
+        $q = $request->input('search');
+        $field = $request->input('filter'); // title | location (search field)
+        $categoryId = $request->input('category');
+        $when = $request->input('when'); // upcoming | past
+
+        $query = Event::with(['creator', 'category']);
+
+        if ($q) {
+            if (in_array($field, ['title', 'location'])) {
+                $query->where($field, 'like', "%{$q}%");
+            } else {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('title', 'like', "%{$q}%")
+                        ->orWhere('location', 'like', "%{$q}%")
+                        ->orWhere('description', 'like', "%{$q}%");
+                });
+            }
+        }
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($when === 'upcoming') {
+            $query->where('end_date_time', '>=', now());
+        } elseif ($when === 'past') {
+            $query->where('end_date_time', '<', now());
+        }
+
+        // Default ordering by start date desc
+        $query->orderBy('start_date_time', 'desc');
+
+        $listevent = $query->paginate(12)->withQueryString();
+
+        return view(
+            'front-page.event.index',
+            ['listevent' => $listevent, 'categories' => $categories],
+            ['title' => 'List Event']
+        );
+    }
+
+    public function search(Request $request)
+    {
+        $q = $request->input('q');
+        $field = $request->input('filter'); // title | location
+        $categoryId = $request->input('category');
+        $when = $request->input('when');
+
+        $query = Event::with(['category']);
+
+        if ($q) {
+            if (in_array($field, ['title', 'location'])) {
+                $query->where($field, 'like', "%{$q}%");
+            } else {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('title', 'like', "%{$q}%")
+                        ->orWhere('location', 'like', "%{$q}%")
+                        ->orWhere('description', 'like', "%{$q}%");
+                });
+            }
+        }
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($when === 'upcoming') {
+            $query->where('end_date_time', '>=', now());
+        } elseif ($when === 'past') {
+            $query->where('end_date_time', '<', now());
+        }
+
+        $query->orderBy('start_date_time', 'desc');
+
+        $events = $query->paginate(12)->appends($request->only(['q', 'filter', 'category', 'when']));
+
+        $html = view('front-page.event.partials.cards', ['events' => $events])->render();
+        $pagination = '';
+        if ($events->hasPages()) {
+            $pagination = view('front-page.event.partials.pagination', ['paginator' => $events])->render();
+        }
+
+        return response()->json([
+            'html' => $html,
+            'pagination' => $pagination,
+            'count' => $events->total(),
+        ]);
     }
 
     public function show($slug) // Menerima $slug, bukan $id
@@ -204,5 +287,52 @@ class EventController extends Controller
         }
         $event->delete();
         return redirect()->route('profile.creator')->with('success', 'Event berhasil dihapus!');
+    }
+
+    public function showPaymentEvent($slug)
+    {
+        $title = 'Events Payment';
+
+        $user  = Auth()->user();
+        $event = Event::where('slug', $slug)->where('start_date_time', '>', now())->firstOrFail();
+        $event = $this->prepareEventData($event);
+        $paymentUser = null;
+
+        $data = compact('title', 'user', 'event', 'paymentUser');
+        return view('front-page.event.payment', $data);
+    }
+
+    public function processPayment(Request $request, $slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+        $user = Auth::user();
+
+        // Check if user already registered
+        $existingRegistration = Registrant::where('event_id', $event->id)->where('user_id', $user->id)->first();
+        if ($existingRegistration) {
+            return redirect()->back()->withErrors(['message' => 'Anda sudah terdaftar untuk event ini.']);
+        }
+
+        // For free events, directly register
+        if ($event->price == 0) {
+            Registrant::create([
+                'event_id' => $event->id,
+                'user_id' => $user->id,
+                'registration_date' => now(),
+                'status' => 'confirmed',
+            ]);
+            return redirect()->route('event.show', $slug)->with('success', 'Pendaftaran berhasil!');
+        }
+
+        // For paid events, here you would integrate with payment gateway
+        // For now, assume payment is successful and register
+        Registrant::create([
+            'event_id' => $event->id,
+            'user_id' => $user->id,
+            'registration_date' => now(),
+            'status' => 'confirmed',
+        ]);
+
+        return redirect()->route('event.show', $slug)->with('success', 'Pembayaran berhasil dan pendaftaran selesai!');
     }
 }
