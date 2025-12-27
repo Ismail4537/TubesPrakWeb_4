@@ -42,6 +42,8 @@ Route::get('event/create', [EventController::class, 'create'])->middleware('auth
 Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
 Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
 Route::delete('event/delete/{id}', [EventController::class, 'destroy'])->middleware('auth')->name('event.destroy');
+Route::get('event/payment/{slug}', [EventController::class, 'showPaymentEvent'])->middleware('auth')->name('event.payment');
+Route::post('event/payment/{slug}', [EventController::class, 'processPayment'])->middleware('auth')->name('event.payment.process');
 
 Route::get('/dashboard', function () {
     return view('dashboard.home', ['title' => 'Dashboard']);

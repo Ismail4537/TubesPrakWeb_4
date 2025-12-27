@@ -286,4 +286,51 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('profile.creator')->with('success', 'Event berhasil dihapus!');
     }
+
+    public function showPaymentEvent($slug)
+    {
+        $title = 'Events Payment';
+
+        $user  = Auth()->user();
+        $event = Event::where('slug', $slug)->where('start_date_time', '>', now())->firstOrFail();
+        $event = $this->prepareEventData($event);
+        $paymentUser = null;
+
+        $data = compact('title', 'user', 'event', 'paymentUser');
+        return view('front-page.event.payment', $data);
+    }
+
+    public function processPayment(Request $request, $slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+        $user = Auth::user();
+
+        // Check if user already registered
+        $existingRegistration = Registrant::where('event_id', $event->id)->where('user_id', $user->id)->first();
+        if ($existingRegistration) {
+            return redirect()->back()->withErrors(['message' => 'Anda sudah terdaftar untuk event ini.']);
+        }
+
+        // For free events, directly register
+        if ($event->price == 0) {
+            Registrant::create([
+                'event_id' => $event->id,
+                'user_id' => $user->id,
+                'registration_date' => now(),
+                'status' => 'confirmed',
+            ]);
+            return redirect()->route('event.show', $slug)->with('success', 'Pendaftaran berhasil!');
+        }
+
+        // For paid events, here you would integrate with payment gateway
+        // For now, assume payment is successful and register
+        Registrant::create([
+            'event_id' => $event->id,
+            'user_id' => $user->id,
+            'registration_date' => now(),
+            'status' => 'confirmed',
+        ]);
+
+        return redirect()->route('event.show', $slug)->with('success', 'Pembayaran berhasil dan pendaftaran selesai!');
+    }
 }
