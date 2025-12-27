@@ -22,11 +22,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="space-y-4 lg:col-start-3">
             <div class="relative w-full h-auto rounded-lg overflow-hidden shadow-xl">
-                @if ($event['image_path'] != null)
-                    <img src="{{ asset($event['image_path']) }}" alt="{{ $event['title'] }}" class="w-full h-full object-cover">
-                @else
-                    <img src="{{ asset('Image/Preview.jpg') }}" alt="{{ $event['title'] }}" class="w-full h-full object-cover">
-                @endif
+                <img src="{{ $event['image_path'] ? asset('storage/' . $event['image_path']) : asset('Image/Preview.jpg') }}" class="w-full h-full object-cover" alt="{{ $event['title'] }}">
                  <div class="lg:col-start-3">
                     <div class="flex border border-gray-200 rounded-lg overflow-hidden shadow-md">
                         <div class="w-1/2 flex items-center justify-center py-3 px-2 text-gray-600">
@@ -36,9 +32,19 @@
                                 Rp,{{ number_format($event['price'], 0, ',', '.') }},-
                             @endif
                         </div>
-                        <button class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition">
-                            Beli Tiket
-                        </button>
+                        @auth
+                    <a href="{{ route('event.payment', ['slug' => $event['slug']]) }}" 
+                       class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
+                        <p>Beli Tiket</p>                            
+                    </a>
+                @endauth
+
+                @guest
+                    <a href="{{ route('login') }}" 
+                      class="w-1/2 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-2 transition text-center">
+                        <p>Beli Tiket</p>                                                  
+                    </a>
+                @endguest
                     </div>
                 </div>
             </div>

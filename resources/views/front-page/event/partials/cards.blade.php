@@ -4,13 +4,9 @@
             class="border border-gray-300 w-full max-w-xs bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
 
             <div class="relative h-32 sm:h-42">
-                @if ($event['image_path'] != null)
-                    <img src="{{ $event['image_path'] }}" alt="{{ $event['title'] }}"
-                        class="w-full h-full object-cover rounded-t-xl">
-                @else
-                    <img src="{{ asset('Image/Preview.jpg') }}" alt="{{ $event['title'] }}"
-                        class="w-full h-full object-cover rounded-t-xl">
-                @endif
+               <img src="{{ $event['image_path'] ? asset('storage/' . $event['image_path']) : asset('Image/Preview.jpg') }}" 
+                                 class="w-full h-full object-cover" 
+                                 alt="{{ $event['title'] }}">
             </div>
 
             <div class="px-4 py-5 pt-3 grow flex flex-col">
@@ -36,7 +32,7 @@
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                             </path>
                         </svg>
-                        <span>{{ $event['start_date_time'] }} / {{ $event['end_date_time'] }}</span>
+                        <span>{{ $event['start_date_time'] }}</span>
                     </div>
                     <div class="flex items-center">
                         <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -49,21 +45,7 @@
                         </svg>
                         <span>{{ $event['location'] }}</span>
                     </div>
-                    <div class="flex items-center">
-                        @php
-                            $status = strtolower($event['status'] ?? 'draft');
-                            $statusClasses = [
-                                'scheduled' => 'bg-blue-100 text-blue-700',
-                                'ongoing' => 'bg-green-100 text-green-700',
-                                'completed' => 'bg-yellow-100 text-yellow-700',
-                                'cancelled' => 'bg-red-100 text-red-700',
-                            ];
-                            $currentClass = $statusClasses[$status] ?? 'bg-blue-100 text-blue-700';
-                        @endphp
-                        <span class="px-2 py-1 {{ $currentClass }} rounded-full text-[10px] font-bold uppercase">
-                            {{ $event['status'] ?? 'Draft' }}
-                        </span>
-                    </div>
+                    
                     <div class="flex items-center">
                         <svg class="w-4 h-4 text-gray-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
