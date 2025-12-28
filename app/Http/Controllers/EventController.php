@@ -161,8 +161,8 @@ class EventController extends Controller
                 'description' => 'required|string',
                 'location' => 'required|string|max:255',
                 'category' => 'required|exists:categories,id',
-                'start_date_time' => 'required|date',
-                'end_date_time' => 'required|date',
+                'start_date_time' => 'required|date|after:today',
+                'end_date_time' => 'required|date|after:start_date_time',
                 'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
@@ -172,19 +172,15 @@ class EventController extends Controller
                 'category.required' => 'Kategori event wajib dipilih.',
                 'category.exists' => 'Kategori yang dipilih tidak valid.',
                 'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'start_date_time.after' => 'Tanggal mulai event tidak boleh sebelum hari ini.',
                 'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'end_date_time.after' => 'Tanggal dan waktu selesai harus sesudah dari tanggal dan waktu mulai.',
                 'image_path.required' => 'Gambar event wajib diisi.',
             ]
         );
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput();
-        }
-
-        if ($request->start_date_time >= $request->end_date_time) {
-            return redirect()->back()
-                ->withErrors(['end_date_time' => 'Tanggal dan waktu selesai harus lebih besar dari tanggal dan waktu mulai.'])
                 ->withInput();
         }
 
@@ -227,8 +223,8 @@ class EventController extends Controller
                 'description' => 'required|string',
                 'location' => 'required|string|max:255',
                 'category' => 'required|exists:categories,id',
-                'start_date_time' => 'required|date',
-                'end_date_time' => 'required|date',
+                'start_date_time' => 'required|date|after:today',
+                'end_date_time' => 'required|date|after:start_date_time',
                 'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
@@ -238,19 +234,15 @@ class EventController extends Controller
                 'category.required' => 'Kategori event wajib dipilih.',
                 'category.exists' => 'Kategori yang dipilih tidak valid.',
                 'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'start_date_time.after' => 'Tanggal mulai event tidak boleh sebelum hari ini.',
                 'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'end_date_time.after' => 'Tanggal dan waktu selesai harus sesudah dari tanggal dan waktu mulai.',
                 'image_path.image' => 'Path gambar event harus berupa file gambar.',
             ]
         );
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput();
-        }
-
-        if ($request->start_date_time >= $request->end_date_time) {
-            return redirect()->back()
-                ->withErrors(['end_date_time' => 'Tanggal dan waktu selesai harus lebih besar dari tanggal dan waktu mulai.'])
                 ->withInput();
         }
 

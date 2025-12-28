@@ -65,6 +65,9 @@
                             </div>
                         </label>
                     </div>
+                    <label for="remove_photo" class="text-sm text-gray-600">Hapus foto profil saat ini
+                        <input type="checkbox" name="remove_photo" id="remove_photo" class="mt-2"
+                            value="on"></label>
                 </div>
 
                 <div>

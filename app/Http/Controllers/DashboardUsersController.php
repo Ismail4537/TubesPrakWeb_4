@@ -46,8 +46,8 @@ class DashboardUsersController extends Controller
             [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+                'phone' => 'required|string|max:21',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'phone' => 'nullable|string|max:21',
             ],
             [
                 'name.required' => 'Nama lengkap wajib diisi.',
@@ -59,6 +59,7 @@ class DashboardUsersController extends Controller
                 'photo.max' => 'Ukuran foto profil maksimal 2MB.',
                 'photo.mimes' => 'Foto profil harus berformat jpeg, png, jpg, atau gif.',
                 'phone.max' => 'Nomor telepon maksimal 15 karakter.',
+                'phone.required' => 'Nomor telepon wajib diisi.',
             ]
         );
         if ($validator->fails()) {
@@ -92,7 +93,7 @@ class DashboardUsersController extends Controller
             'phone' => $request->phone,
             'birthdate' => $request->birthdate,
             'profile_photo_path' => $imagePath,
-            'role' => $request->role,
+            // 'role' => $request->role,
         ]);
 
         return redirect('/dashboard/users')->with('success', 'User berhasil diperbarui');

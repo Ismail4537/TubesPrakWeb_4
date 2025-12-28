@@ -14,6 +14,7 @@ use App\Http\Controllers\EventReportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardHomeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\EventRegistrantController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // AJAX endpoint untuk Top Picks per tab
@@ -105,3 +106,12 @@ Route::post('/payment/event/{event}', [PaymentController::class, 'create'])->mid
 Route::get('/payment/result/event/{event}', [PaymentController::class, 'result'])->middleware('auth')->name('payment.result');
 Route::get('/payment/result', [PaymentController::class, 'finish'])->middleware('auth')->name('payment.finish');
 // Notification handled via API route (no CSRF)
+
+// Event registrants (creator/admin only - enforced in controller)
+Route::get('/event/{event}/registrants', [EventRegistrantController::class, 'index'])
+    ->middleware('auth')
+    ->name('event.registrants.index');
+
+Route::delete('/event/{event}/registrants/{user}', [EventRegistrantController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('event.registrants.destroy');

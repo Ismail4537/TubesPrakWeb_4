@@ -138,6 +138,11 @@
                     @if ($registrants->isEmpty())
                         <p>Belum ada yang mendaftar untuk event ini.</p>
                     @else
+                        @if ($event->creator_id == Auth::user()->id || Auth::user()->role == 'admin')
+                            <a href="{{ route('event.registrants.index', ['event' => $event->id]) }}"
+                                class="text-blue-500">Lihat detail pendaftar</a>
+                            <p></p>
+                        @endif
                         <div class="flex gap-5 items-center">
                             @foreach ($registrants as $registrant)
                                 <div>

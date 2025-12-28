@@ -46,7 +46,7 @@
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No</th>
-                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama/Foto Profil</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Email</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No. Telp</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
@@ -58,8 +58,14 @@
                         <?php $__empty_1 = true; $__currentLoopData = $users ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($index + 1); ?></td>
-                                <td class="px-6 py-4 font-medium text-gray-900"><a
-                                        href="<?php echo e(route('contac.show', ['id' => $user->id])); ?>"><?php echo e($user->name); ?></a>
+                                <td class="px-6 py-4 font-medium text-gray-900">
+                                    <a href="<?php echo e(route('contac.show', ['id' => $user->id])); ?>">
+                                        <img class="h-10 w-10 rounded-full object-cover border-2 border-white/20 hover:border-white transition"
+                                            src="<?php echo e($user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&color=fff'); ?>"
+                                            alt="Profile">
+                                        <?php echo e($user->name); ?>
+
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($user->email); ?></td>
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($user->phone ?? '-'); ?></td>
@@ -83,16 +89,21 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex justify-center gap-3">
-                                        <a href="<?php echo e(route('dashboard.users.edit', $user->id)); ?>"
-                                            class="text-blue-500 font-medium hover:underline">Edit</a>
+                                        <?php if(Auth::id() === $user->id): ?>
+                                            <a href="<?php echo e(route('profile.edit', $user->id)); ?>"
+                                                class="text-blue-500 font-medium hover:underline">Edit</a>
+                                        <?php else: ?>
+                                            <a href="<?php echo e(route('dashboard.users.edit', $user->id)); ?>"
+                                                class="text-blue-500 font-medium hover:underline">Edit</a>
 
-                                        <form action="<?php echo e(route('dashboard.users.destroy', $user->id)); ?>" method="POST"
-                                            onsubmit="return confirm('Yakin hapus user ini?')">
-                                            <?php echo csrf_field(); ?>
-                                            <?php echo method_field('DELETE'); ?>
-                                            <button type="submit"
-                                                class="text-red-600 font-medium hover:underline">Delete</button>
-                                        </form>
+                                            <form action="<?php echo e(route('dashboard.users.destroy', $user->id)); ?>"
+                                                method="POST" onsubmit="return confirm('Yakin hapus user ini?')">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
+                                                <button type="submit"
+                                                    class="text-red-600 font-medium hover:underline">Delete</button>
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>

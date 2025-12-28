@@ -112,6 +112,7 @@
         const amount = <?php echo json_encode((int) $amount, 15, 512) ?>;
         const createUrl = <?php echo json_encode(route('payment.create', ['event' => $event->id]), 512) ?>;
         const resultBaseUrl = <?php echo json_encode(route('payment.result', ['event' => $event->id]), 512) ?>;
+        const eventShowUrl = <?php echo json_encode(route('event.show', ['slug' => $event->slug]), 512) ?>;
 
         function getCsrfToken() {
             const meta = document.querySelector('meta[name="csrf-token"]');
@@ -148,7 +149,7 @@
                     }
                     setStatus('Pendaftaran berhasil. Anda sudah terdaftar.', 'success');
                     setTimeout(() => {
-                        window.location.href = resultBaseUrl + '?status=success';
+                        window.location.href = eventShowUrl;
                     }, 800);
                     return;
                 }

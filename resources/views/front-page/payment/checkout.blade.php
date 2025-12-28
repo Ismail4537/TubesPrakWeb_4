@@ -100,6 +100,7 @@
         const amount = @json((int) $amount);
         const createUrl = @json(route('payment.create', ['event' => $event->id]));
         const resultBaseUrl = @json(route('payment.result', ['event' => $event->id]));
+        const eventShowUrl = @json(route('event.show', ['slug' => $event->slug]));
 
         function getCsrfToken() {
             const meta = document.querySelector('meta[name="csrf-token"]');
@@ -136,7 +137,7 @@
                     }
                     setStatus('Pendaftaran berhasil. Anda sudah terdaftar.', 'success');
                     setTimeout(() => {
-                        window.location.href = resultBaseUrl + '?status=success';
+                        window.location.href = eventShowUrl;
                     }, 800);
                     return;
                 }

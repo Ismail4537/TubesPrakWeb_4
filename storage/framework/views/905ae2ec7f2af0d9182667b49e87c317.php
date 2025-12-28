@@ -150,6 +150,11 @@
                     <?php if($registrants->isEmpty()): ?>
                         <p>Belum ada yang mendaftar untuk event ini.</p>
                     <?php else: ?>
+                        <?php if($event->creator_id == Auth::user()->id || Auth::user()->role == 'admin'): ?>
+                            <a href="<?php echo e(route('event.registrants.index', ['event' => $event->id])); ?>"
+                                class="text-blue-500">Lihat detail pendaftar</a>
+                            <p></p>
+                        <?php endif; ?>
                         <div class="flex gap-5 items-center">
                             <?php $__currentLoopData = $registrants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $registrant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div>

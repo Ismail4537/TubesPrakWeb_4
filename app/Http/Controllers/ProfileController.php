@@ -40,7 +40,7 @@ class ProfileController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'phone' => 'nullable|string|max:21',
+                'phone' => 'required|string|max:21',
             ],
             [
                 'name.required' => 'Nama lengkap wajib diisi.',
@@ -52,6 +52,7 @@ class ProfileController extends Controller
                 'photo.max' => 'Ukuran foto profil maksimal 2MB.',
                 'photo.mimes' => 'Foto profil harus berformat jpeg, png, jpg, atau gif.',
                 'phone.max' => 'Nomor telepon maksimal 15 karakter.',
+                'phone.required' => 'Nomor telepon wajib diisi.',
             ]
         );
         if ($validator->fails()) {
@@ -86,7 +87,7 @@ class ProfileController extends Controller
             'phone' => $request->phone,
             'birthdate' => $request->birthdate,
             'profile_photo_path' => $imagePath,
-            'role' => $request->role,
+            // 'role' => $request->role,
         ]);
         return redirect()->route('profile')->with('success', 'Profile updated successfully.');
     }

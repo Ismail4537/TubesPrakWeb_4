@@ -4,9 +4,8 @@
             class="border border-gray-300 w-full max-w-xs bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
 
             <div class="relative h-32 sm:h-42">
-               <img src="{{ $event['image_path'] ? asset('storage/' . $event['image_path']) : asset('Image/Preview.jpg') }}" 
-                                 class="w-full h-full object-cover" 
-                                 alt="{{ $event['title'] }}">
+                <img src="{{ $event['image_path'] ? asset('storage/' . $event['image_path']) : asset('Image/Preview.jpg') }}"
+                    class="w-full h-full object-cover" alt="{{ $event['title'] }}">
             </div>
 
             <div class="px-4 py-5 pt-3 grow flex flex-col">
@@ -45,7 +44,7 @@
                         </svg>
                         <span>{{ $event['location'] }}</span>
                     </div>
-                    
+
                     <div class="flex items-center">
                         <svg class="w-4 h-4 text-gray-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

@@ -37,7 +37,7 @@
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No</th>
-                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama/Foto Profil</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Email</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No. Telp</th>
                             <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
@@ -49,8 +49,13 @@
                         @forelse ($users ?? [] as $index => $user)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 font-medium text-gray-900"><a
-                                        href="{{ route('contac.show', ['id' => $user->id]) }}">{{ $user->name }}</a>
+                                <td class="px-6 py-4 font-medium text-gray-900">
+                                    <a href="{{ route('contac.show', ['id' => $user->id]) }}">
+                                        <img class="h-10 w-10 rounded-full object-cover border-2 border-white/20 hover:border-white transition"
+                                            src="{{ $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&color=fff' }}"
+                                            alt="Profile">
+                                        {{ $user->name }}
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $user->phone ?? '-' }}</td>
@@ -72,16 +77,21 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex justify-center gap-3">
-                                        <a href="{{ route('dashboard.users.edit', $user->id) }}"
-                                            class="text-blue-500 font-medium hover:underline">Edit</a>
+                                        @if (Auth::id() === $user->id)
+                                            <a href="{{ route('profile.edit', $user->id) }}"
+                                                class="text-blue-500 font-medium hover:underline">Edit</a>
+                                        @else
+                                            <a href="{{ route('dashboard.users.edit', $user->id) }}"
+                                                class="text-blue-500 font-medium hover:underline">Edit</a>
 
-                                        <form action="{{ route('dashboard.users.destroy', $user->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin hapus user ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-red-600 font-medium hover:underline">Delete</button>
-                                        </form>
+                                            <form action="{{ route('dashboard.users.destroy', $user->id) }}"
+                                                method="POST" onsubmit="return confirm('Yakin hapus user ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="text-red-600 font-medium hover:underline">Delete</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
