@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             User::create([
                 'name' => 'User ' . ($i + 1),
                 'email' => 'user' . ($i + 1) . '@example.com',
@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Category::factory(5)->create();
-        Event::factory(20)->recycle(User::all())->recycle(Category::all())->create();
-        Registrant::factory(50)->recycle(User::all())->recycle(Event::all())->create();
+        Category::factory(15)->create();
+        Event::factory(50)->recycle(User::all())->recycle(Category::all())->create();
+        Registrant::factory(150)->recycle(User::all())->recycle(Event::all())->create();
     }
 }

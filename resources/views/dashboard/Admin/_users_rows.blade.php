@@ -5,15 +5,13 @@
         <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
         <td class="px-6 py-4 text-gray-600">{{ $user->phone ?? '-' }}</td>
         <td class="px-6 py-4 text-gray-600">
-            {{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}
+            {{ optional($user->birthdate)->format('d/m/Y') ?? '-' }}
         </td>
-        
+
         <td class="px-6 py-4">
             @php
                 $role = strtolower($user->role ?? 'user');
-                $roleClass = $role === 'admin' 
-                    ? 'bg-purple-100 text-purple-700' 
-                    : 'bg-blue-100 text-blue-700';
+                $roleClass = $role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700';
             @endphp
             <span class="px-2 py-1 {{ $roleClass }} rounded-full text-[10px] font-bold uppercase">
                 {{ $user->role ?? 'User' }}
@@ -29,8 +27,7 @@
                     onsubmit="return confirm('Yakin hapus user ini?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
-                        class="text-red-600 font-medium hover:underline">Delete</button>
+                    <button type="submit" class="text-red-600 font-medium hover:underline">Delete</button>
                 </form>
             </div>
         </td>
