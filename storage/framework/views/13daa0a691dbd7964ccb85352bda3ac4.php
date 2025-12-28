@@ -52,8 +52,7 @@
 
                             <img id="preview-image"
                                 class="absolute inset-0 w-full h-full object-cover <?php echo e(isset($event['image_path']) ? '' : 'hidden'); ?> z-10"
-                                src="<?php echo e(isset($event['image_path']) ? asset('storage/' . $event['image_path']) : '#'); ?>"
-                                alt="Preview" />
+                                src="<?php echo e(asset($event['image_path']) ?? '#'); ?>" alt="Preview" />
 
                             <div id="hover-overlay"
                                 class="absolute inset-0 bg-black/40 <?php echo e(isset($event['image_path']) ? 'flex' : 'hidden'); ?> z-20 items-center justify-center transition opacity-0 hover:opacity-100">
@@ -121,7 +120,7 @@ unset($__errorArgs, $__bag); ?>
                         <div class="relative">
                             <span
                                 class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-sm">Rp</span>
-                            <input type="number" name="harga" id="price" required
+                            <input type="number" name="price" id="price" required
                                 value="<?php echo e(old('harga', $event['price'] ?? '')); ?>"
                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
                         </div>

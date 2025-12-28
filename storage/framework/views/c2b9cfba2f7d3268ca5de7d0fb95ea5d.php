@@ -61,7 +61,9 @@
                         <?php $__empty_1 = true; $__currentLoopData = $listevent ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($index + 1); ?></td>
-                                <td class="px-6 py-4 font-medium text-gray-900"><?php echo e($event['title'] ?? '-'); ?></td>
+                                <td class="px-6 py-4 font-medium text-gray-900"><a
+                                        href="<?php echo e(route('event.show', ['slug' => $event['slug']])); ?>"><?php echo e($event['title'] ?? '-'); ?></a>
+                                </td>
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($event['category']['name'] ?? '-'); ?></td>
                                 <td class="px-6 py-4">
                                     <?php

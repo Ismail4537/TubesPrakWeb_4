@@ -14,6 +14,7 @@ class DashboardHomeController extends Controller
         $totalUsers = User::count();
         $totalCreators = User::has('events')->count();
         $totalEvents = Event::count();
+        $totalAdmins = User::where('role', 'admin')->count();
         $totalEventsScheduled = Event::where('status', 'scheduled')->count();
         $totalEventsOngoing = Event::where('status', 'ongoing')->count();
         $totalEventsCompleted = Event::where('status', 'completed')->count();
@@ -29,6 +30,7 @@ class DashboardHomeController extends Controller
             'totalEventsCompleted' => $totalEventsCompleted,
             'totalEventsCancelled' => $totalEventsCancelled,
             'totalCategories' => $totalCategories,
+            'totalAdmins' => $totalAdmins,
         ]);
     }
 }

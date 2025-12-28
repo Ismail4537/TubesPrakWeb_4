@@ -49,20 +49,24 @@
                         @forelse ($users ?? [] as $index => $user)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-900"><a
+                                        href="{{ route('contac.show', ['id' => $user->id]) }}">{{ $user->name }}</a>
+                                </td>
                                 <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $user->phone ?? '-' }}</td>
                                 <td class="px-6 py-4 text-gray-600">
-                                    {{ optional($user->date_of_birth)->format('d/m/Y') ?? '-' }}
+                                    {{ $user->birthdate ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
                                     @php
                                         $role = strtolower($user->role ?? 'user');
-                                        $roleClass = $role === 'admin' 
-                                            ? 'bg-purple-100 text-purple-700' 
-                                            : 'bg-blue-100 text-blue-700';
+                                        $roleClass =
+                                            $role === 'admin'
+                                                ? 'bg-purple-100 text-purple-700'
+                                                : 'bg-blue-100 text-blue-700';
                                     @endphp
-                                    <span class="px-2 py-1 {{ $roleClass }} rounded-full text-[10px] font-bold uppercase">
+                                    <span
+                                        class="px-2 py-1 {{ $roleClass }} rounded-full text-[10px] font-bold uppercase">
                                         {{ $user->role ?? 'User' }}
                                     </span>
                                 </td>
@@ -102,38 +106,44 @@
                     </p>
                 </div>
 
-                @if($users->hasPages())
-                <div class="flex flex-1 justify-between sm:justify-end gap-2">
-                    @if($users->onFirstPage())
-                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Previous
-                    </button>
-                    @else
-                    <a href="{{ $users->previousPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Previous
-                    </a>
-                    @endif
+                @if ($users->hasPages())
+                    <div class="flex flex-1 justify-between sm:justify-end gap-2">
+                        @if ($users->onFirstPage())
+                            <button
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Previous
+                            </button>
+                        @else
+                            <a href="{{ $users->previousPageUrl() }}"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Previous
+                            </a>
+                        @endif
 
-                    <div class="hidden md:flex gap-1">
-                        @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
-                            @if($page == $users->currentPage())
-                                <span class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</span>
-                            @else
-                                <a href="{{ $url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
-                            @endif
-                        @endforeach
+                        <div class="hidden md:flex gap-1">
+                            @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                                @if ($page == $users->currentPage())
+                                    <span
+                                        class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $url }}"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        @if ($users->hasMorePages())
+                            <a href="{{ $users->nextPageUrl() }}"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Next
+                            </a>
+                        @else
+                            <button
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Next
+                            </button>
+                        @endif
                     </div>
-
-                    @if($users->hasMorePages())
-                    <a href="{{ $users->nextPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Next
-                    </a>
-                    @else
-                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Next
-                    </button>
-                    @endif
-                </div>
                 @endif
             </div>
         </div>
@@ -169,7 +179,7 @@
                     try {
                         const res = await fetch(`${url}?${params.toString()}`);
                         const data = await res.json();
-                        tbody.innerHTML = data.html; 
+                        tbody.innerHTML = data.html;
                     } catch (e) {
                         tbody.innerHTML = `
                             <tr>

@@ -43,8 +43,7 @@
 
                             <img id="preview-image"
                                 class="absolute inset-0 w-full h-full object-cover {{ isset($event['image_path']) ? '' : 'hidden' }} z-10"
-                                src="{{ isset($event['image_path']) ? asset('storage/' . $event['image_path']) : '#' }}"
-                                alt="Preview" />
+                                src="{{ asset($event['image_path']) ?? '#' }}" alt="Preview" />
 
                             <div id="hover-overlay"
                                 class="absolute inset-0 bg-black/40 {{ isset($event['image_path']) ? 'flex' : 'hidden' }} z-20 items-center justify-center transition opacity-0 hover:opacity-100">

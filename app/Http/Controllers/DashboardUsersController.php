@@ -45,7 +45,7 @@ class DashboardUsersController extends Controller
             $request->all(),
             [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'phone' => 'nullable|string|max:21',
             ],

@@ -26,7 +26,6 @@
                         class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
                 </div>
 
-                
                 <div class="shrink-0">
                     <select id="filterRole"
                         class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm">
@@ -37,7 +36,6 @@
                 </div>
             </div>
 
-            
             
         </div>
 
@@ -60,22 +58,25 @@
                         <?php $__empty_1 = true; $__currentLoopData = $users ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($index + 1); ?></td>
-                                <td class="px-6 py-4 font-medium text-gray-900"><?php echo e($user->name); ?></td>
+                                <td class="px-6 py-4 font-medium text-gray-900"><a
+                                        href="<?php echo e(route('contac.show', ['id' => $user->id])); ?>"><?php echo e($user->name); ?></a>
+                                </td>
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($user->email); ?></td>
                                 <td class="px-6 py-4 text-gray-600"><?php echo e($user->phone ?? '-'); ?></td>
                                 <td class="px-6 py-4 text-gray-600">
-                                    <?php echo e(optional($user->date_of_birth)->format('d/m/Y') ?? '-'); ?>
+                                    <?php echo e($user->birthdate ?? '-'); ?>
 
                                 </td>
                                 <td class="px-6 py-4">
-                                    
                                     <?php
                                         $role = strtolower($user->role ?? 'user');
-                                        $roleClass = $role === 'admin' 
-                                            ? 'bg-purple-100 text-purple-700' 
-                                            : 'bg-blue-100 text-blue-700';
+                                        $roleClass =
+                                            $role === 'admin'
+                                                ? 'bg-purple-100 text-purple-700'
+                                                : 'bg-blue-100 text-blue-700';
                                     ?>
-                                    <span class="px-2 py-1 <?php echo e($roleClass); ?> rounded-full text-[10px] font-bold uppercase">
+                                    <span
+                                        class="px-2 py-1 <?php echo e($roleClass); ?> rounded-full text-[10px] font-bold uppercase">
                                         <?php echo e($user->role ?? 'User'); ?>
 
                                     </span>
@@ -108,7 +109,6 @@
                 </table>
             </div>
 
-            
             <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <div class="hidden sm:flex flex-1 items-center">
                     <p class="text-sm text-gray-600">
@@ -118,37 +118,43 @@
                 </div>
 
                 <?php if($users->hasPages()): ?>
-                <div class="flex flex-1 justify-between sm:justify-end gap-2">
-                    <?php if($users->onFirstPage()): ?>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Previous
-                    </button>
-                    <?php else: ?>
-                    <a href="<?php echo e($users->previousPageUrl()); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Previous
-                    </a>
-                    <?php endif; ?>
+                    <div class="flex flex-1 justify-between sm:justify-end gap-2">
+                        <?php if($users->onFirstPage()): ?>
+                            <button
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Previous
+                            </button>
+                        <?php else: ?>
+                            <a href="<?php echo e($users->previousPageUrl()); ?>"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Previous
+                            </a>
+                        <?php endif; ?>
 
-                    <div class="hidden md:flex gap-1">
-                        <?php $__currentLoopData = $users->getUrlRange(1, $users->lastPage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php if($page == $users->currentPage()): ?>
-                                <span class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg"><?php echo e($page); ?></span>
-                            <?php else: ?>
-                                <a href="<?php echo e($url); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"><?php echo e($page); ?></a>
-                            <?php endif; ?>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <div class="hidden md:flex gap-1">
+                            <?php $__currentLoopData = $users->getUrlRange(1, $users->lastPage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if($page == $users->currentPage()): ?>
+                                    <span
+                                        class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg"><?php echo e($page); ?></span>
+                                <?php else: ?>
+                                    <a href="<?php echo e($url); ?>"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"><?php echo e($page); ?></a>
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+
+                        <?php if($users->hasMorePages()): ?>
+                            <a href="<?php echo e($users->nextPageUrl()); ?>"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Next
+                            </a>
+                        <?php else: ?>
+                            <button
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Next
+                            </button>
+                        <?php endif; ?>
                     </div>
-
-                    <?php if($users->hasMorePages()): ?>
-                    <a href="<?php echo e($users->nextPageUrl()); ?>" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Next
-                    </a>
-                    <?php else: ?>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                        Next
-                    </button>
-                    <?php endif; ?>
-                </div>
                 <?php endif; ?>
             </div>
         </div>
@@ -157,7 +163,6 @@
     <?php $__env->startPush('scripts'); ?>
         <script>
             (function() {
-                // Debounce Function
                 function debounce(fn, delay = 300) {
                     let t;
                     return (...args) => {
@@ -185,8 +190,7 @@
                     try {
                         const res = await fetch(`${url}?${params.toString()}`);
                         const data = await res.json();
-                        // Pastikan backend mengembalikan view partial yang sesuai dengan struktur tabel baru (tr > td)
-                        tbody.innerHTML = data.html; 
+                        tbody.innerHTML = data.html;
                     } catch (e) {
                         tbody.innerHTML = `
                             <tr>
@@ -212,4 +216,5 @@
 <?php if (isset($__componentOriginal9f1bd0e1d04155988af00158efd48dd8)): ?>
 <?php $component = $__componentOriginal9f1bd0e1d04155988af00158efd48dd8; ?>
 <?php unset($__componentOriginal9f1bd0e1d04155988af00158efd48dd8); ?>
-<?php endif; ?><?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/dashboard/Admin/users.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/dashboard/Admin/users.blade.php ENDPATH**/ ?>

@@ -52,7 +52,9 @@
                         @forelse ($listevent ?? [] as $index => $event)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-gray-600">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4 font-medium text-gray-900">{{ $event['title'] ?? '-' }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-900"><a
+                                        href="{{ route('event.show', ['slug' => $event['slug']]) }}">{{ $event['title'] ?? '-' }}</a>
+                                </td>
                                 <td class="px-6 py-4 text-gray-600">{{ $event['category']['name'] ?? '-' }}</td>
                                 <td class="px-6 py-4">
                                     @php

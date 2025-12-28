@@ -1,50 +1,78 @@
+<?php if (isset($component)) { $__componentOriginal9f1bd0e1d04155988af00158efd48dd8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f1bd0e1d04155988af00158efd48dd8 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.back-page.layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('back-page.layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('title', null, []); ?> Update Category <?php $__env->endSlot(); ?>
 
-<div class="max-w-lg mx-auto bg-neutral-primary-soft p-6 rounded-base shadow border border-default">
+    <a href="<?php echo e(route('categories.index')); ?>" class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors mb-4">
+        <button type="button" class="px-5 py-2 flex gap-2 items-center text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Kembali ke Daftar Category
+        </button>
+    </a>
 
-    <h2 class="text-lg font-semibold mb-4">Update Category</h2>
-
+    
     <form action="<?php echo e(route('categories.update', $category->id)); ?>" method="POST">
         <?php echo csrf_field(); ?>
         <?php echo method_field('PUT'); ?>
 
-        <!-- Nama -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-1">Nama Category</label>
-            <input
-                type="text"
-                name="name"
-                value="<?php echo e(old('name', $category->name)); ?>"
-                class="w-full px-3 py-2 border border-default-medium rounded-base
-                       focus:ring-brand focus:border-brand"
-                required
-            >
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-6 space-y-6">
 
-            <?php $__errorArgs = ['name'];
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Category</label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        value="<?php echo e(old('name', $category->name)); ?>" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition"
+                    >
+                    <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
-            <?php unset($message);
+                        <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-        </div>
+                </div>
 
-        <!-- Button -->
-        <div class="flex justify-end gap-2">
-            <a href="<?php echo e(route('categories.index')); ?>"
-               class="px-4 py-2 border rounded-base text-sm">
-                Batal
-            </a>
+            </div>
 
-            <button
-                type="submit"
-                class="px-4 py-2 bg-brand text-black rounded-base hover:bg-brand-dark text-sm">
-                Update
-            </button>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
+                <a href="<?php echo e(route('categories.index')); ?>" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition shadow-sm">
+                    Batal
+                </a>
+                
+                <button type="submit" class="px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Update Category
+                </button>
+            </div>
         </div>
     </form>
-
-</div>
-<?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/dashboard/categories/edit.blade.php ENDPATH**/ ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f1bd0e1d04155988af00158efd48dd8)): ?>
+<?php $attributes = $__attributesOriginal9f1bd0e1d04155988af00158efd48dd8; ?>
+<?php unset($__attributesOriginal9f1bd0e1d04155988af00158efd48dd8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f1bd0e1d04155988af00158efd48dd8)): ?>
+<?php $component = $__componentOriginal9f1bd0e1d04155988af00158efd48dd8; ?>
+<?php unset($__componentOriginal9f1bd0e1d04155988af00158efd48dd8); ?>
+<?php endif; ?><?php /**PATH C:\Users\iafat\Herd\Acarra\resources\views/dashboard/categories/edit.blade.php ENDPATH**/ ?>
