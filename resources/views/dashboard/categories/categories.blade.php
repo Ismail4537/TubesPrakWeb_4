@@ -1,304 +1,132 @@
 <x-back-page.layout>
-<x-slot:title> {{$title}} </x-slot:title>
-    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-        <!-- Search, Create, Filter -->
-        <div class="p-4 flex items-center justify-between">
+    <x-slot:title> {{ $title }} </x-slot:title>
 
-            <!-- Search + Create -->
-            <div class="flex items-center space-x-3">
-
-                <!-- Search bar -->
-                <div class="relative w-full max-w-sm">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+    <div class="max-w-6xl mx-auto">
+        {{-- Header: Search & Create --}}
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div class="flex flex-1 items-center gap-2 max-w-2xl">
+                {{-- Search Bar --}}
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                    </div>
-                    <input type="text" placeholder="Search"
-                        class="block w-full ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium
-                       text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
+                    </span>
+                    <input id="searchCategory" type="text" placeholder="Search..."
+                        class="w-full pl-9 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm shadow-sm" />
                 </div>
-
-                <!-- Create Button -->
-                <button onclick="window.location='{{ route('categories.create') }}'"
-                    class="px-4 py-2 bg-brand text-black rounded-base shadow hover:bg-brand-dark text-sm">
-                    Create
-                </button>
-
-
-
             </div>
 
-            <!-- Filter Button -->
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="shrink-0 flex items-center text-body bg-neutral-secondary-medium border border-default-medium
-               px-3 py-2 rounded-base hover:bg-neutral-tertiary-medium hover:text-heading text-sm">
-                Filter
-                <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 9-7 7-7-7" />
+            <a href="{{ route('dashboard.categories.create') }}"
+                class="shrink-0 flex items-center gap-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-400 transition shadow-sm text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-            </button>
+                <span class="hidden sm:inline">Create</span>
+                <span class="sm:hidden">Add</span>
+            </a>
+        </div>
 
-            <!-- Dropdown -->
-            <div id="dropdown"
-                class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-32">
-                <ul class="p-2 text-sm text-body font-medium">
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Role</a></li>
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Tanggal</a></li>
-                    <li><a href="#" class="block p-2 hover:bg-neutral-tertiary-medium rounded">Email</a></li>
-                </ul>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">No</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nama</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody" class="divide-y divide-gray-200 text-sm">
+                        @include('dashboard.categories._categories_rows')
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <!-- TABLE -->
-        <table class="w-full text-sm text-left text-body">
-            <thead class="bg-neutral-secondary-medium border-b border-default-medium">
-                <tr>
-                    <th class="px-6 py-3 font-medium text-center">No</th>
-                    <th class="px-6 py-3 font-medium">Nama</th>
-
-                    <!-- Tambahan kolom AKSI -->
-                    <th class="px-6 py-3 font-medium text-center">Aksi</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @foreach ($categories as $index => $category)
-                    <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
-                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
-
-                        <td class="px-6 py-4">{{ $category->name }}</td>
-
-                        <!-- Aksi -->
-                        <td class="px-6 py-4 text-center">
-                            <a href="{{ route('categories.edit', $category->id) }}"
-                                class="text-brand font-medium hover:underline mr-4">
-                                Update
-                            </a>
-
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                class="inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="text-red-600 font-medium hover:underline"
-                                    onclick="return confirm('Yakin hapus?')">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-
-
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- PAGINATION -->
-        <div class="flex justify-end items-center space-x-2 px-4 py-4">
-            <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&lt;</button>
-            <button class="border px-3 py-1 rounded bg-neutral-secondary-medium">1</button>
-            <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">2</button>
-            <button class="border px-3 py-1 rounded hover:bg-neutral-secondary-medium">&gt;</button>
-        </div>
-    </div>
-</x-back-page.layout>
-    <div id="createCategoryModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    
-    <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity"></div>
-
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            
-            <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100">
-                
-                <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-900">Tambah Kategori Baru</h3>
-                    <button id="btnCloseModal" type="button" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+            <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="hidden sm:flex flex-1 items-center">
+                    <p class="text-sm text-gray-600">
+                        Menampilkan <span class="font-medium">{{ $categories->firstItem() ?? 0 }}</span> sampai 
+                        <span class="font-medium">{{ $categories->lastItem() ?? 0 }}</span> dari 
+                        <span class="font-medium">{{ $categories->total() ?? 0 }}</span> hasil
+                    </p>
                 </div>
 
-                <form id="formCreateCategory" class="p-6 space-y-5">
-                    <input type="hidden" id="editRowIndex" value="">
-                    <div>
-                        <label for="categoryName" class="block text-sm font-semibold text-gray-700 mb-1">Nama Kategori</label>
-                        <input type="text" id="categoryName" required placeholder="Contoh: Otomotif" 
-                            class="block w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                @if($categories->hasPages())
+                <div class="flex flex-1 justify-between sm:justify-end gap-2">
+                    @if($categories->onFirstPage())
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition" disabled>
+                        Previous
+                    </button>
+                    @else
+                    <a href="{{ $categories->previousPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        Previous
+                    </a>
+                    @endif
+
+                    <div class="hidden md:flex gap-1">
+                        @foreach($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
+                            @if($page == $categories->currentPage())
+                                <span class="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ $page }}</a>
+                            @endif
+                        @endforeach
                     </div>
 
-                    <div>
-                        <label for="categorySlug" class="block text-sm font-semibold text-gray-700 mb-1">Slug (Auto)</label>
-                        <input type="text" id="categorySlug" disabled placeholder="otomotif" 
-                            class="block w-full px-3 py-2 bg-gray-50 border border-gray-200 text-gray-500 text-sm rounded-lg cursor-not-allowed">
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button type="button" id="btnCancelModal" class="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
-                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 text-sm transition-all">
-                            Simpan Data
-                        </button>
-                    </div>
-                </form>
-
+                    @if($categories->hasMorePages())
+                    <a href="{{ $categories->nextPageUrl() }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        Next
+                    </a>
+                    @else
+                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition" disabled>
+                        Next
+                    </button>
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
     </div>
-</div>
 
-<div id="toastSuccess" class="fixed top-5 right-5 z-[60] hidden transform transition-all duration-300 ease-in-out translate-x-full">
-    <div class="flex items-center w-full max-w-xs p-4 space-x-3 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 border-green-500">
-        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/></svg>
-        </div>
-        <div class="ml-3 text-sm font-normal text-gray-800">Kategori berhasil dibuat!</div>
-    </div>
-</div>
+    @push('scripts')
+        <script>
+            (function() {
+                const searchInput = document.getElementById('searchCategory');
+                const tableBody = document.getElementById('categoriesTableBody');
+                const fetchUrl = "{{ route('dashboard.categories.search') }}";
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. SETUP VARIABEL & ELEMENT
-    
-    console.log("Script Categories Dimuat! "); 
+                let debounceTimer;
 
-    const modal       = document.getElementById('createCategoryModal');
-    const form        = document.getElementById('formCreateCategory');
-    const tableBody   = document.querySelector('tbody');
-    const toast       = document.getElementById('toastSuccess');
-    
-    // Tombol
-    const btnOpen     = document.getElementById('btnCreateCategory'); // Tombol Create
-    const btnClose    = document.getElementById('btnCloseModal');     // Tombol X
-    const btnCancel   = document.getElementById('btnCancelModal');    // Tombol Batal
-
-    // Input Form
-    const inputName     = document.getElementById('categoryName');
-    const inputSlug     = document.getElementById('categorySlug');
-    const inputRowIndex = document.getElementById('editRowIndex');
-    const modalTitle    = document.getElementById('modal-title');
-
-    
-    // 2. FUNGSI BANTUAN
-    
-    
-    // Buka/Tutup Modal
-    const toggleModal = () => {
-        if(modal) {
-            modal.classList.toggle('hidden');
-        } else {
-            console.error("Modal gak ketemu bang!");
-        }
-    };
-
-    // Munculin Toast
-    const showToast = () => {
-        if(toast) {
-            toast.classList.remove('hidden', 'translate-x-full');
-            setTimeout(() => {
-                toast.classList.add('translate-x-full');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
-        }
-    };
-
-    // Bikin Slug Otomatis
-    const generateSlug = (text) => {
-        return text.toString().toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w\-]+/g, '')
-            .replace(/\-\-+/g, '-')
-            .replace(/^-+/, '')
-            .replace(/-+$/, '');
-    };
-
-    // 3. EVENT LISTENERS
-
-    // A. TOMBOL CREATE (Buka Modal Kosong)
-    if(btnOpen) {
-        btnOpen.addEventListener('click', () => {
-            console.log("Tombol Create Diklik!"); // Debugging
-            form.reset();               
-            if(inputSlug) inputSlug.value = "";       
-            if(inputRowIndex) inputRowIndex.value = "";   
-            if(modalTitle) modalTitle.innerText = "Tambah Kategori Baru"; 
-            toggleModal();
-        });
-    } else {
-        console.error("Tombol Create (btnCreateCategory) gak ketemu!");
-    }
-
-    // B. TOMBOL CLOSE & CANCEL
-    if(btnClose) btnClose.addEventListener('click', toggleModal);
-    if(btnCancel) btnCancel.addEventListener('click', toggleModal);
-    
-    // C. AUTO SLUG (Pas ngetik nama)
-    if(inputName) {
-        inputName.addEventListener('input', function() {
-            if(inputSlug) inputSlug.value = generateSlug(this.value);
-        });
-    }
-
-    // D. TOMBOL UPDATE (Dipanggil dari HTML onclick)
-    window.openEditModal = (button) => {
-        console.log("Tombol Update Diklik!");
-        const row = button.closest('tr');
-        
-        // Ambil Data Nama (Kolom ke-2)
-        const currentName = row.cells[1].innerText;
-        
-        // Isi ke Form
-        if(inputName) inputName.value = currentName;
-        if(inputSlug) inputSlug.value = generateSlug(currentName);
-        if(inputRowIndex) inputRowIndex.value = row.rowIndex; 
-        if(modalTitle) modalTitle.innerText = "Edit Kategori";
-        toggleModal();
-    };
-
-    // E. SIMPAN DATA (SUBMIT)
-    if(form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            console.log("Form Disubmit!");
-
-            const newName = inputName.value;
-            const targetIndex = inputRowIndex.value;
-
-            if (targetIndex) {
-                // === MODE EDIT (UPDATE) ===
-                const row = document.querySelector('table').rows[targetIndex];
-                if(row) {
-                    row.cells[1].innerText = newName;
+                function debounceSearch() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(fetchData, 300);
                 }
-            } else {
-                // === MODE CREATE (BARU) ===
-                const newNo = tableBody.rows.length + 1;
-                
-                // HTML Baris Baru
-                const newRowHTML = `
-                    <tr class="bg-neutral-primary-soft border-b border-black-200 hover:bg-neutral-secondary-medium transition-colors">
-                        <td class="px-6 py-4 text-center">${newNo}</td>
-                        <td class="px-6 py-4 font-medium text-heading">${newName}</td>
-                        <td class="px-6 py-4 text-center">
-                            <button onclick="openEditModal(this)" class="text-indigo-600 font-medium hover:underline mr-4">Update</button>
-                            <button class="text-red-600 font-medium hover:underline" onclick="this.closest('tr').remove()">Delete</button>
-                        </td>
-                    </tr>
-                `;
-                tableBody.insertAdjacentHTML('beforeend', newRowHTML);
-            }
 
-            showToast();
-            toggleModal();
-            form.reset();
-        });
-    }
-});
-</script>
+                async function fetchData() {
+                    const q = searchInput.value.trim();
+                    const params = new URLSearchParams({ q });
+
+                    try {
+                        const res = await fetch(`${fetchUrl}?${params}`);
+                        const data = await res.json();
+                        tableBody.innerHTML = data.html;
+                    } catch (e) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="px-6 py-6 text-center text-red-500">
+                                    Gagal memuat data
+                                </td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                if(searchInput) {
+                    searchInput.addEventListener('input', debounceSearch);
+                }
+            })();
+        </script>
+    @endpush
+</x-back-page.layout>

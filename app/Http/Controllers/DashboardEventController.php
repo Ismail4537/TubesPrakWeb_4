@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Event;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardEventController extends Controller
 {
@@ -12,8 +16,8 @@ class DashboardEventController extends Controller
     // Removed inline dummy data to keep controller clean.
     private $events = [];
 
-   // Method untuk menambahkan Slug dan Asset
-    private function prepareEventData($event) 
+    // Method untuk menambahkan Slug dan Asset
+    private function prepareEventData($event)
     {
         // 1. Tambahkan Slug berdasarkan Judul
         $event['slug'] = Str::slug($event['judul']);
@@ -52,7 +56,7 @@ class DashboardEventController extends Controller
     public function index()
     {
         // Panggil prepareEventData untuk setiap item
-        $listevent = Event::with(['creator','category'])->get();
+        $listevent = Event::with(['creator', 'category'])->get();
         $listevent = Event::paginate(10)->withQueryString();
         $categories = Category::all();
         return view('dashboard.events.events', compact('listevent', 'categories'), ['title' => 'List Event']);
@@ -81,46 +85,65 @@ class DashboardEventController extends Controller
 
     public function create()
     {
-        return view('dashboard.events.create');
+        $categories = Category::all();
+        return view('dashboard.events.create', compact('categories'), ['title' => 'Create Event']);
     }
 
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'kategori' => 'required|string|max:100',
-            'lokasi' => 'required|string|max:255',
-            'tanggal' => 'required|string|max:50',
-            'harga' => 'required|string|max:50',
-            'deskripsi' => 'required|string',
-            'alamat_lengkap' => 'required|string|max:500',
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'location' => 'required|string|max:255',
+                'category' => 'required|exists:categories,id',
+                'start_date_time' => 'required|date',
+                'end_date_time' => 'required|date',
+                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'title.required' => 'Judul event wajib diisi.',
+                'description.required' => 'Deskripsi event wajib diisi.',
+                'location.required' => 'Lokasi event wajib diisi.',
+                'category.required' => 'Kategori event wajib dipilih.',
+                'category.exists' => 'Kategori yang dipilih tidak valid.',
+                'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'image_path.required' => 'Gambar event wajib diisi.',
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->start_date_time >= $request->end_date_time) {
+            return redirect()->back()
+                ->withErrors(['end_date_time' => 'Tanggal dan waktu selesai harus lebih besar dari tanggal dan waktu mulai.'])
+                ->withInput();
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image_path')) {
+            $imagePath = $request->file('image_path')->store('event-images', 'public');
+        }
+
+        Event::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'description' => $request->description,
+            'start_date_time' => $request->start_date_time,
+            'end_date_time' => $request->end_date_time,
+            'location' => $request->location,
+            'image_path' => $imagePath,
+            'price' => $request->price,
+            'status' => $request->status,
+            'category_id' => $request->category,
+            'creator_id' => Auth::user()->id, // Set creator_id dari user yang sedang login
         ]);
-
-        // Simpan data event baru ke session-backed events
-        $events = $this->getEventsFromSession();
-
-        $maxId = collect($events)->pluck('id')->max() ?: 0;
-        $newId = $maxId + 1;
-
-        $newEvent = [
-            'id' => $newId,
-            'foto' => $request->input('foto', 'img/event.png'),
-            'judul' => $request->input('judul'),
-            'kategori' => $request->input('kategori'),
-            'lokasi' => $request->input('lokasi'),
-            'tanggal' => $request->input('tanggal'),
-            'harga' => $request->input('harga'),
-            'deskripsi' => $request->input('deskripsi'),
-            'alamat_lengkap' => $request->input('alamat_lengkap'),
-        ];
-
-        $events[] = $newEvent;
-        $this->saveEventsToSession($events);
-
-        return redirect()
-            ->route('dashboard.events.index')
-            ->with('success', 'Event berhasil ditambahkan');
+        return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil dibuat!');
     }
 
     /**
@@ -128,14 +151,13 @@ class DashboardEventController extends Controller
      */
     public function edit(string $id)
     {
-        $events = $this->getEventsFromSession();
-        $event = collect($events)->firstWhere('id', (int)$id);
-
+        $categories = Category::all();
+        $event = Event::find($id);
         if (!$event) {
             abort(404, 'Event tidak ditemukan.');
         }
 
-        return view('dashboard.events.edit', compact('event'));
+        return view('dashboard.events.edit', compact('event', 'categories'), ['title' => 'Edit Event']);
     }
 
     /**
@@ -143,57 +165,108 @@ class DashboardEventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'kategori' => 'required|string|max:100',
-            'lokasi' => 'required|string|max:255',
-            'tanggal' => 'required|string|max:50',
-            'harga' => 'required|string|max:50',
-            'deskripsi' => 'required|string',
-            'alamat_lengkap' => 'required|string|max:500',
+        $event = Event::findOrFail($id);
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'location' => 'required|string|max:255',
+                'category' => 'required|exists:categories,id',
+                'start_date_time' => 'required|date',
+                'end_date_time' => 'required|date',
+                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ],
+            [
+                'title.required' => 'Judul event wajib diisi.',
+                'description.required' => 'Deskripsi event wajib diisi.',
+                'location.required' => 'Lokasi event wajib diisi.',
+                'category.required' => 'Kategori event wajib dipilih.',
+                'category.exists' => 'Kategori yang dipilih tidak valid.',
+                'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
+                'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
+                'image_path.image' => 'Path gambar event harus berupa file gambar.',
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if ($request->start_date_time >= $request->end_date_time) {
+            return redirect()->back()
+                ->withErrors(['end_date_time' => 'Tanggal dan waktu selesai harus lebih besar dari tanggal dan waktu mulai.'])
+                ->withInput();
+        }
+
+        if ($event->image_path != null) {
+            $imagePath = $event->image_path;
+        } else {
+            $imagePath = null;
+        }
+        if ($request->hasFile('image_path')) {
+            Storage::delete('public/' . $imagePath);
+            $imagePath = $request->file('image_path')->store('event-images', 'public');
+        }
+        $price = $request->price;
+        if ($request->price == null) {
+            $price = 0;
+        } else {
+            $price = $request->price;
+        }
+
+        $event->update([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'description' => $request->description,
+            'start_date_time' => $request->start_date_time,
+            'end_date_time' => $request->end_date_time,
+            'location' => $request->location,
+            'image_path' => $imagePath,
+            'price' => $price,
+            'status' => $request->status,
+            'category_id' => $request->category,
         ]);
-
-        $events = $this->getEventsFromSession();
-
-        $updated = false;
-        foreach ($events as &$evt) {
-            if ((int)$evt['id'] === (int)$id) {
-                $evt['foto'] = $request->input('foto', $evt['foto']);
-                $evt['judul'] = $request->input('judul');
-                $evt['kategori'] = $request->input('kategori');
-                $evt['lokasi'] = $request->input('lokasi');
-                $evt['tanggal'] = $request->input('tanggal');
-                $evt['harga'] = $request->input('harga');
-                $evt['deskripsi'] = $request->input('deskripsi');
-                $evt['alamat_lengkap'] = $request->input('alamat_lengkap');
-                $updated = true;
-                break;
-            }
-        }
-
-        if (!$updated) {
-            abort(404, 'Event tidak ditemukan.');
-        }
-
-        $this->saveEventsToSession($events);
-
-        return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil diupdate');
+        return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil diperbarui!');
     }
 
     /**
      * Delete an event from session.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $events = $this->getEventsFromSession();
-        $filtered = array_values(array_filter($events, function ($evt) use ($id) {
-            return (int)$evt['id'] !== (int)$id;
-        }));
-
-        $this->saveEventsToSession($filtered);
-
-        return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil dihapus');
+        $event = Event::findOrFail($id);
+        if ($event->image_path) {
+            Storage::delete('public/' . $event->image_path);
+        }
+        $event->delete();
+        return redirect()->route('dashboard.events.index')->with('success', 'Event berhasil dihapus!');
     }
 
+    public function search(Request $request)
+    {
+        $q = $request->query('q');
+        $category = $request->query('category');
 
+        $events = Event::with('category')
+            ->when($q, function ($query) use ($q) {
+                $query->where('title', 'LIKE', "%{$q}%");
+            })
+            ->when($category, function ($query) use ($category) {
+                $query->whereHas('category', function ($q2) use ($category) {
+                    $q2->where('id', $category);
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->limit(20)
+            ->get();
+
+        $html = view('dashboard.events.partials.table-rows', compact('events'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
 }

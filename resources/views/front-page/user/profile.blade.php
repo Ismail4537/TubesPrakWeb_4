@@ -99,7 +99,7 @@
                         <a href={{ route('event.show', ['slug' => $event['slug']]) }} class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-100 transition group cursor-pointer">
                             <img class="w-full h-40 object-cover" src=
                             @if ($event['image_path'] != null)
-                                {{ $event['image_path'] }}
+                                {{ asset($event['image_path']) }}
                             @else
                                 {{ asset('Image/Preview.jpg') }}
                             @endif alt="Gambar Event">

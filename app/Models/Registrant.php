@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Registrant extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'event_id',
+    ];
     use HasFactory;
+    // protected $with = ['user_id', 'event_id'];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

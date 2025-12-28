@@ -11,10 +11,13 @@ use App\Http\Controllers\ContacController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EventReportController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardHomeController;
+use App\Http\Controllers\PaymentController;
 
-Route::get('/', function () {
-    return view('front-page.home', ["title" => "Home"]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// AJAX endpoint untuk Top Picks per tab
+Route::get('/top-picks', [HomeController::class, 'topPicks'])->name('top.picks');
 
 Route::get('/about', function () {
     return view('front-page.about', ["title" => "About"]);
@@ -26,24 +29,38 @@ Route::get('/profile/edit', [ProfileController::class, 'edit'])->middleware('aut
 Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 Route::get('/contac', [ContacController::class, 'index'])->name('contac');
+// Live search (front) for contacts
+Route::get('/contac/search', [ContacController::class, 'search'])->name('contac.search');
 Route::get('/contac/{id}', [ContacController::class, 'show'])->name('contac.show');
 
 // Rute untuk Index (event.index)
 Route::get('event', [EventController::class, 'index'])->name('event.index');
+// Live search (front)
+Route::get('event/search', [EventController::class, 'search'])->name('event.search');
 // Rute untuk Show (event.show), menggunakan parameter dinamis {id}
-Route::get('event/{slug}', [EventController::class, 'show'])->name('event.show');
+Route::get('event/show/{slug}', [EventController::class, 'show'])->middleware('auth')->name('event.show');
+Route::get('event/edit/{id}', [EventController::class, 'edit'])->middleware('auth')->name('event.edit');
+Route::get('event/create', [EventController::class, 'create'])->middleware('auth')->name('event.create');
+Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
+Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
+Route::delete('event/delete/{id}', [EventController::class, 'destroy'])->middleware('auth')->name('event.destroy');
+Route::delete('event/resign/{id}', [EventController::class, 'resign'])->middleware('auth')->name('event.resign');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.home', ['title' => 'Dashboard']);
-})->middleware('isAdmin')->name('dashboard');
+Route::get('/dashboard', [DashboardHomeController::class, 'index'])->middleware('isAdmin')->name('dashboard');
 
 Route::get('/dashboard/events', [DashboardEventController::class, 'Index'])->middleware('isAdmin')->name('dashboard.events.index');
-Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
 Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->middleware('isAdmin')->name('dashboard.events.store');
-Route::get('/dashboard/events/{id}/edit', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');
-Route::put('/dashboard/events/{id}', [DashboardEventController::class, 'update'])->middleware('isAdmin')->name('dashboard.events.update');
-Route::delete('/dashboard/events/{id}', [DashboardEventController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.events.destroy');
+Route::get('/dashboard/events/create', [DashboardEventController::class, 'create'])->middleware('isAdmin')->name('dashboard.events.create');
+Route::get('/dashboard/events/edit/{id}', [DashboardEventController::class, 'edit'])->middleware('isAdmin')->name('dashboard.events.edit');
+Route::put('/dashboard/events/update/{id}', [DashboardEventController::class, 'update'])->middleware('isAdmin')->name('dashboard.events.update');
+Route::delete('/dashboard/events/delete/{id}', [DashboardEventController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.events.destroy');
 Route::get('/dashboard/categories', [DashboardCategoryController::class, 'index'])->middleware('isAdmin')->name('dashboard.categories');
+Route::get('/dashboard/categories/create', [DashboardCategoryController::class, 'create'])->middleware('isAdmin')->name('dashboard.categories.create');
+Route::get(
+    '/dashboard/events/search',
+    [DashboardEventController::class, 'search']
+)->middleware('isAdmin')->name('dashboard.events.search');
+
 
 Route::get('/dashboard/users', [DashboardUsersController::class, 'index'])->middleware('isAdmin')->name('dashboard.users.index');
 Route::get('/dashboard/users/{id}/edit', [DashboardUsersController::class, 'edit'])->middleware('isAdmin')->name('dashboard.users.edit');
@@ -51,6 +68,19 @@ Route::put('/dashboard/users/{id}', [DashboardUsersController::class, 'update'])
 Route::delete('/dashboard/users/{id}', [DashboardUsersController::class, 'destroy'])->middleware('isAdmin')->name('dashboard.users.destroy');
 Route::get('/dashboard/users/create', [DashboardUsersController::class, 'create'])->middleware('isAdmin')->name('dashboard.users.create');
 Route::post('/dashboard/users', [DashboardUsersController::class, 'store'])->middleware('isAdmin')->name('dashboard.users.store');
+// Live search (AJAX) for users
+Route::get(
+    '/dashboard/categories/search',
+    [DashboardCategoryController::class, 'search']
+)->middleware('isAdmin')->name('dashboard.categories.search');
+
+Route::get(
+    '/dashboard/users/search',
+    [DashboardUsersController::class, 'search']
+)->middleware('isAdmin')->name('dashboard.users.search');
+
+
+
 
 Route::get('/login', [LoginController::class, 'create'])->middleware('guest')->name('login');
 Route::post('/login', [LoginController::class, 'store'])->middleware('guest');
@@ -68,3 +98,10 @@ Route::get('/reports/users/pdf/view', [UserReportController::class, 'viewPDF'])-
 Route::get('/reports/events', [EventReportController::class, 'index'])->middleware('isAdmin')->name('reports.events.index');
 Route::get('/reports/events/pdf/download', [EventReportController::class, 'downloadPDF'])->middleware('isAdmin')->name('reports.events.pdf.download');
 Route::get('/reports/events/pdf/view', [EventReportController::class, 'viewPDF'])->middleware('isAdmin')->name('reports.events.pdf.view');
+
+// Payments (Midtrans Snap)
+Route::get('/payment/event/{event}', [PaymentController::class, 'show'])->middleware('auth')->name('payment.show');
+Route::post('/payment/event/{event}', [PaymentController::class, 'create'])->middleware('auth')->name('payment.create');
+Route::get('/payment/result/event/{event}', [PaymentController::class, 'result'])->middleware('auth')->name('payment.result');
+Route::get('/payment/result', [PaymentController::class, 'finish'])->middleware('auth')->name('payment.finish');
+// Notification handled via API route (no CSRF)
