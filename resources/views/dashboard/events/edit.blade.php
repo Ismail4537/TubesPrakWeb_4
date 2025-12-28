@@ -104,9 +104,18 @@
                     <div>
                         <label for="location" class="block text-sm font-semibold text-gray-700 mb-1">Lokasi
                             (Tempat)</label>
-                        <input type="text" name="location" id="location" required
-                            value="{{ old('location', $event['location'] ?? '') }}"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                        <div class="relative">
+                            <input type="text" name="location" id="location" required
+                                value="{{ old('location', $event['location'] ?? '') }}"
+                                placeholder="Cari alamat (OpenStreetMap)..." autocomplete="off"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                            <div id="location-suggestions"
+                                class="absolute z-[2000] mt-2 w-full rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden hidden">
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">Atau pilih titik lokasi lewat peta.</p>
+                        <div id="location-map" class="mt-3 h-64 rounded-lg border border-gray-200 overflow-hidden">
+                        </div>
                         @error('location')
                             <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                         @enderror
@@ -205,4 +214,131 @@
             reader.readAsDataURL(file);
         }
     }
+
+    (function initNominatimLocationAutocomplete() {
+        const input = document.getElementById('location');
+        const box = document.getElementById('location-suggestions');
+        if (!input || !box) return;
+
+        let debounceId = null;
+        let aborter = null;
+
+        function hide() {
+            box.classList.add('hidden');
+            box.innerHTML = '';
+        }
+
+        function showLoading() {
+            box.innerHTML = '<div class="px-4 py-3 text-sm text-gray-500">Mencari alamat...</div>';
+            box.classList.remove('hidden');
+        }
+
+        function render(items) {
+            if (!items || items.length === 0) {
+                box.innerHTML = '<div class="px-4 py-3 text-sm text-gray-500">Alamat tidak ditemukan.</div>';
+                box.classList.remove('hidden');
+                return;
+            }
+
+            box.innerHTML = items.map((it) => {
+                const name = (it.display_name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `
+                    <button type="button" data-name="${encodeURIComponent(it.display_name || '')}"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
+                        ${name}
+                    </button>
+                `;
+            }).join('');
+            box.classList.remove('hidden');
+
+            box.querySelectorAll('button[data-name]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    input.value = decodeURIComponent(btn.getAttribute('data-name') || '');
+                    hide();
+                });
+            });
+        }
+
+        async function search(q) {
+            if (aborter) aborter.abort();
+            aborter = new AbortController();
+
+            showLoading();
+            const url = `/api/geocoding/nominatim/search?q=${encodeURIComponent(q)}`;
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                signal: aborter.signal,
+            });
+            if (!res.ok) {
+                render([]);
+                return;
+            }
+            const data = await res.json().catch(() => []);
+            render(Array.isArray(data) ? data : []);
+        }
+
+        input.addEventListener('input', () => {
+            const q = (input.value || '').trim();
+            if (q.length < 3) {
+                if (aborter) aborter.abort();
+                hide();
+                return;
+            }
+            if (debounceId) clearTimeout(debounceId);
+            debounceId = setTimeout(() => {
+                search(q).catch(() => render([]));
+            }, 350);
+        });
+
+        input.addEventListener('blur', () => {
+            setTimeout(hide, 150);
+        });
+    })();
+</script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function initLocationMapPicker() {
+        const mapEl = document.getElementById('location-map');
+        const input = document.getElementById('location');
+        if (!mapEl || !input || typeof L === 'undefined') return;
+
+        const defaultCenter = [-6.200000, 106.816666];
+        const map = L.map(mapEl).setView(defaultCenter, 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker = L.marker(defaultCenter, {
+            draggable: false
+        }).addTo(map);
+
+        async function reverseToAddress(lat, lon) {
+            const url =
+                `/api/geocoding/nominatim/reverse?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
+            const res = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            if (!res.ok) return;
+            const data = await res.json().catch(() => null);
+            if (data && data.display_name) {
+                input.value = data.display_name;
+            }
+        }
+
+        map.on('click', (e) => {
+            const lat = e.latlng.lat;
+            const lon = e.latlng.lng;
+            marker.setLatLng([lat, lon]);
+            reverseToAddress(lat, lon).catch(() => {});
+        });
+    })();
 </script>
