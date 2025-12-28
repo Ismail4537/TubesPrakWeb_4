@@ -23,7 +23,7 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Poster / Banner Event</label>
                     <div
                         class="relative w-full h-64 border-2 border-gray-300 border-dashed rounded-xl overflow-hidden bg-gray-50 group hover:border-blue-400 transition">
-                        <input id="image_upload" name="image" type="file" class="hidden" accept="image/*"
+                        <input id="image_upload" name="image_path" type="file" class="hidden" accept="image/*"
                             onchange="previewFile()" />
 
                         <label for="image_upload" class="cursor-pointer">
@@ -54,31 +54,36 @@
                             </div>
                         </label>
                     </div>
+                    @error('image_path')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label for="title" class="block text-sm font-semibold text-gray-700 mb-1">Judul Event</label>
-                    <input type="text" name="judul" id="title" required
-                        value="{{ old('judul', $event['title'] ?? '') }}"
+                    <input type="text" name="title" id="title" required
+                        value="{{ old('title', $event['title'] ?? '') }}"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                    @error('title')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="kategori" class="block text-sm font-semibold text-gray-700 mb-1">Kategori</label>
-                        <select name="kategori" id="kategori" required
+                        <label for="category" class="block text-sm font-semibold text-gray-700 mb-1">Kategori</label>
+                        <select name="category" id="category" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm appearance-none bg-white">
                             <option value="">Pilih Kategori</option>
-                            <option value="seminar"
-                                {{ old('kategori', $event['category_id'] ?? '') == 'seminar' ? 'selected' : '' }}>
-                                Seminar</option>
-                            <option value="workshop"
-                                {{ old('kategori', $event['category_id'] ?? '') == 'workshop' ? 'selected' : '' }}>
-                                Workshop</option>
-                            <option value="expo"
-                                {{ old('kategori', $event['category_id'] ?? '') == 'expo' ? 'selected' : '' }}>Expo
-                            </option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ old('category', $event['category_id'] ?? '') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}</option>
+                            @endforeach
                         </select>
+                        @error('category')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
@@ -86,59 +91,98 @@
                         <div class="relative">
                             <span
                                 class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-sm">Rp</span>
-                            <input type="number" name="harga" id="price" required
+                            <input type="number" name="price" id="price" required
                                 value="{{ old('harga', $event['price'] ?? '') }}"
                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
                         </div>
+                        @error('price')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label for="location" class="block text-sm font-semibold text-gray-700 mb-1">Lokasi
                             (Tempat)</label>
-                        <input type="text" name="lokasi" id="location" required
-                            value="{{ old('lokasi', $event['location'] ?? '') }}"
+                        <input type="text" name="location" id="location" required
+                            value="{{ old('location', $event['location'] ?? '') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                        @error('location')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
 
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal
+                        <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Mulai
                             Event</label>
-                        <input type="datetime-local" name="tanggal" id="date" required
-                            value="{{ old('tanggal', isset($event['start_date_time']) ? date('Y-m-d\TH:i', strtotime($event['end_date_time'])) : '') }}"
+                        <input type="datetime-local" name="start_date_time" id="date" required
+                            value="{{ old('start_date_time', $event['start_date_time'] ?? '') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                        @error('start_date_time')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Akhir
+                            Event</label>
+                        <input type="datetime-local" name="end_date_time" id="date" required
+                            value="{{ old('end_date_time', $event['end_date_time'] ?? '') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">
+                        @error('end_date_time')
+                            <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
+                {{-- event status --}}
+                <div>
+                    <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">Status Event</label>
+                    <select name="status" id="status" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm appearance-none bg-white">
+                        <option value="scheduled"
+                            {{ old('status', $event['status'] ?? '') == 'scheduled' ? 'selected' : '' }}>
+                            Scheduled</option>
+                        <option value="ongoing"
+                            {{ old('status', $event['status'] ?? '') == 'ongoing' ? 'selected' : '' }}>
+                            Ongoing</option>
+                        <option value="completed"
+                            {{ old('status', $event['status'] ?? '') == 'completed' ? 'selected' : '' }}>
+                            Completed</option>
+                        <option value="cancelled"
+                            {{ old('status', $event['status'] ?? '') == 'cancelled' ? 'selected' : '' }}>
+                            Cancelled</option>
+                    </select>
+                    @error('status')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
                 <div>
                     <label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
-                    <textarea name="deskripsi" id="description" rows="4" required
+                    <textarea name="description" id="description" rows="4" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">{{ old('deskripsi', $event['description'] ?? '') }}</textarea>
+                    @error('description')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <div>
-                    <label for="address" class="block text-sm font-semibold text-gray-700 mb-1">Alamat Lengkap</label>
-                    <textarea name="alamat_lengkap" id="address" rows="2" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition">{{ old('alamat_lengkap', $event['location'] ?? '') }}</textarea>
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
+                    <a href="{{ route('dashboard.events.index') }}"
+                        class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition shadow-sm">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition shadow-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Update Event
+                    </button>
                 </div>
             </div>
-
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
-                <a href="{{ route('dashboard.events.index') }}"
-                    class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition shadow-sm">
-                    Batal
-                </a>
-                <button type="submit"
-                    class="px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition shadow-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                    </svg>
-                    Update Event
-                </button>
-            </div>
-        </div>
     </form>
 </x-back-page.layout>
 

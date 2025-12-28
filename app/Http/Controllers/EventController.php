@@ -132,6 +132,9 @@ class EventController extends Controller
         $allRegistrants = Registrant::where('event_id', $event->id)->get();
         $registrants = Registrant::with('user')->where('event_id', $event->id)->take(5)->get();
         $registrantsCount = Registrant::where('event_id', $event->id)->count();
+        $isRegistered = Registrant::where('event_id', $event->id)
+            ->where('user_id', Auth::user()->id)
+            ->exists();
 
         return view('front-page.event.show', [
             'detail' => $event,
@@ -139,6 +142,7 @@ class EventController extends Controller
             'registrants' => $registrants,
             'registrantsCount' => $registrantsCount,
             'allRegistrants' => $allRegistrants,
+            'isRegistered' => $isRegistered,
         ]);
     }
 
@@ -160,7 +164,6 @@ class EventController extends Controller
                 'start_date_time' => 'required|date',
                 'end_date_time' => 'required|date',
                 'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'price' => 'required|numeric',
             ],
             [
                 'title.required' => 'Judul event wajib diisi.',
@@ -171,7 +174,6 @@ class EventController extends Controller
                 'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
                 'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
                 'image_path.required' => 'Gambar event wajib diisi.',
-                'price.required' => 'Harga event wajib diisi.',
             ]
         );
         if ($validator->fails()) {
@@ -228,7 +230,6 @@ class EventController extends Controller
                 'start_date_time' => 'required|date',
                 'end_date_time' => 'required|date',
                 'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'price' => 'required|numeric',
             ],
             [
                 'title.required' => 'Judul event wajib diisi.',
@@ -239,7 +240,6 @@ class EventController extends Controller
                 'start_date_time.required' => 'Tanggal dan waktu mulai event wajib diisi.',
                 'end_date_time.required' => 'Tanggal dan waktu selesai event wajib diisi.',
                 'image_path.image' => 'Path gambar event harus berupa file gambar.',
-                'price.required' => 'Harga event wajib diisi.',
             ]
         );
         if ($validator->fails()) {
@@ -264,6 +264,13 @@ class EventController extends Controller
             $imagePath = $request->file('image_path')->store('event-images', 'public');
         }
 
+        $price = $request->price;
+        if ($request->price == null) {
+            $price = 0;
+        } else {
+            $price = $request->price;
+        }
+
         $event->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -272,7 +279,7 @@ class EventController extends Controller
             'end_date_time' => $request->end_date_time,
             'location' => $request->location,
             'image_path' => $imagePath,
-            'price' => $request->price,
+            'price' => $price,
             'status' => $request->status,
             'category_id' => $request->category,
         ]);
@@ -289,50 +296,16 @@ class EventController extends Controller
         return redirect()->route('profile.creator')->with('success', 'Event berhasil dihapus!');
     }
 
-    public function showPaymentEvent($slug)
+    public function resign($id)
     {
-        $title = 'Events Payment';
-
-        $user  = Auth()->user();
-        $event = Event::where('slug', $slug)->where('start_date_time', '>', now())->firstOrFail();
-        $event = $this->prepareEventData($event);
-        $paymentUser = null;
-
-        $data = compact('title', 'user', 'event', 'paymentUser');
-        return view('front-page.event.payment', $data);
-    }
-
-    public function processPayment(Request $request, $slug)
-    {
-        $event = Event::where('slug', $slug)->firstOrFail();
-        $user = Auth::user();
-
-        // Check if user already registered
-        $existingRegistration = Registrant::where('event_id', $event->id)->where('user_id', $user->id)->first();
-        if ($existingRegistration) {
-            return redirect()->back()->withErrors(['message' => 'Anda sudah terdaftar untuk event ini.']);
+        $registrant = Registrant::where('event_id', $id)
+            ->where('user_id', Auth::user()->id);
+        // echo $registrant;
+        if (!$registrant) {
+            return redirect()->back()->with('error', 'Anda belum terdaftar untuk event ini.');
         }
+        $registrant->delete();
 
-        // For free events, directly register
-        if ($event->price == 0) {
-            Registrant::create([
-                'event_id' => $event->id,
-                'user_id' => $user->id,
-                'registration_date' => now(),
-                'status' => 'confirmed',
-            ]);
-            return redirect()->route('event.show', $slug)->with('success', 'Pendaftaran berhasil!');
-        }
-
-        // For paid events, here you would integrate with payment gateway
-        // For now, assume payment is successful and register
-        Registrant::create([
-            'event_id' => $event->id,
-            'user_id' => $user->id,
-            'registration_date' => now(),
-            'status' => 'confirmed',
-        ]);
-
-        return redirect()->route('event.show', $slug)->with('success', 'Pembayaran berhasil dan pendaftaran selesai!');
+        return redirect()->back()->with('success', 'Anda telah berhasil membatalkan pendaftaran dari event ini.');
     }
 }

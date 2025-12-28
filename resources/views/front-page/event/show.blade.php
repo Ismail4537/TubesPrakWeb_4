@@ -18,10 +18,19 @@
         @if (Auth::user()->id == $event->creator_id)
             <a href="{{ route('event.edit', ['id' => $event->id]) }}">Edit Event</a>
             <form action="{{ route('event.destroy', ['id' => $event->id]) }}" method="POST"
-                onsubmit="return confirm('Are you sure you want to delete this event?');" style="display:inline;">
+                onsubmit="return confirm('Apakah anda yakin ingin hapus event ini?');" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="text-red-600 hover:text-red-800 ml-4">Delete Event</button>
+            </form>
+        @endif
+        @if (Auth::user()->id != $event->creator_id && $isRegistered)
+            <form action="{{ route('event.resign', ['id' => $event->id]) }}" method="POST"
+                onsubmit="return confirm('Apakah anda yakin ingin membatalkan pendaftaran dari event ini?');"
+                style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-600 hover:text-red-800 ml-4">Resign from Event</button>
             </form>
         @endif
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -55,7 +64,7 @@
                                 @if ($event->creator_id == Auth::user()->id)
                                     <span
                                         class="w-1/2 bg-gray-300 text-gray-700 font-bold py-3 px-2 text-center select-none">
-                                        Anda adalah pembuat ini event
+                                        Anda adalah pembuat event ini
                                     </span>
                                 @else
                                     @if ($isRegistered)

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Response;
 
 class PaymentController extends Controller
 {
-    public function show(Event $event, Request $request)
+    public function show(Event $event)
     {
         $amount = (int) round((float) ($event->price ?? 0));
-        return view('front-page.payment', [
+        return view('front-page.payment.checkout', [
             'title' => 'Payment',
             'event' => $event,
             'user' => Auth::user(),
@@ -78,7 +78,7 @@ class PaymentController extends Controller
     {
         $orderId = $request->query('order_id');
 
-        return view('front-page.payment-result', [
+        return view('front-page.payment.result', [
             'title' => 'Payment Result',
             'event' => $event,
             'orderId' => $orderId,

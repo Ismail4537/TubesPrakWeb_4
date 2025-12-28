@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\EventReportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardHomeController;
 use App\Http\Controllers\PaymentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -43,12 +44,9 @@ Route::get('event/create', [EventController::class, 'create'])->middleware('auth
 Route::post('event/store', [EventController::class, 'store'])->middleware('auth')->name('event.store');
 Route::put('event/update/{id}', [EventController::class, 'update'])->middleware('auth')->name('event.update');
 Route::delete('event/delete/{id}', [EventController::class, 'destroy'])->middleware('auth')->name('event.destroy');
-Route::get('event/payment/{slug}', [EventController::class, 'showPaymentEvent'])->middleware('auth')->name('event.payment');
-Route::post('event/payment/{slug}', [EventController::class, 'processPayment'])->middleware('auth')->name('event.payment.process');
+Route::delete('event/resign/{id}', [EventController::class, 'resign'])->middleware('auth')->name('event.resign');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.home', ['title' => 'Dashboard']);
-})->middleware('isAdmin')->name('dashboard');
+Route::get('/dashboard', [DashboardHomeController::class, 'index'])->middleware('isAdmin')->name('dashboard');
 
 Route::get('/dashboard/events', [DashboardEventController::class, 'Index'])->middleware('isAdmin')->name('dashboard.events.index');
 Route::post('/dashboard/events', [DashboardEventController::class, 'store'])->middleware('isAdmin')->name('dashboard.events.store');

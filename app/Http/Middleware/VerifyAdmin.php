@@ -18,14 +18,14 @@ class VerifyAdmin
     {
         // Check if user is authenticated
         if (!Auth::check()) {
-            abort(403, 'You must be logged in to access this resource.');
+            return redirect()->route('login');
         }
-        
+
         // Check if user has admin role
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Access denied. Admin privileges required.');
         }
-        
+
         return $next($request);
     }
 }

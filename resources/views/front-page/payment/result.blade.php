@@ -16,8 +16,7 @@
                 <span class="font-medium">Order ID:</span> {{ $orderId }}
             </p>
 
-            <p class="text-green-700 mb-6">Anda berhasil membeli tiket. Jika tombol masih belum berubah, coba refresh
-                halaman event setelah beberapa detik.</p>
+            <p class="text-green-700 mb-6">Anda berhasil membeli tiket.</p>
             <div class="flex gap-3">
                 <a href="{{ route('event.show', ['slug' => $event->slug]) }}"
                     class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">

@@ -116,7 +116,7 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Ganti Foto Profil</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Thumbnail</label>
 
                             <label
                                 class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-blue-50 hover:border-blue-400 transition-all group">
