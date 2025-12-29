@@ -69,6 +69,42 @@
                                         class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
                                 </div>
 
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Password Lama</label>
+                                    <input type="password" name="current_password" autocomplete="current-password"
+                                        placeholder="Wajib diisi jika ingin ganti password"
+                                        class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                                    @error('current_password')
+                                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Password
+                                            Baru</label>
+                                        <input type="password" name="password" autocomplete="new-password"
+                                            placeholder="Kosongkan jika tidak ingin mengubah"
+                                            class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                                        <p class="text-xs text-gray-500 mt-1 ml-1">Kosongkan jika password tidak ingin
+                                            diubah.</p>
+                                        @error('password')
+                                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Konfirmasi
+                                            Password</label>
+                                        <input type="password" name="password_confirmation" autocomplete="new-password"
+                                            placeholder="Ulangi password baru"
+                                            class="w-full rounded-xl border border-gray-300 px-5 py-3 text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm font-medium">
+                                        @error('password_confirmation')
+                                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 {{-- <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Role</label>
                                 <select name="role" id="role">

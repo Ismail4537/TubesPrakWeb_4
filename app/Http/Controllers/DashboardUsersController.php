@@ -47,6 +47,8 @@ class DashboardUsersController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'phone' => 'required|string|max:21',
+                'password' => 'nullable|string|min:8',
+                'password_confirmation' => 'nullable|required_with:password|same:password',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
             [
@@ -60,6 +62,9 @@ class DashboardUsersController extends Controller
                 'photo.mimes' => 'Foto profil harus berformat jpeg, png, jpg, atau gif.',
                 'phone.max' => 'Nomor telepon maksimal 15 karakter.',
                 'phone.required' => 'Nomor telepon wajib diisi.',
+                'password.min' => 'Password minimal 8 karakter.',
+                'password_confirmation.required_with' => 'Konfirmasi password wajib diisi.',
+                'password_confirmation.same' => 'Konfirmasi password tidak cocok.',
             ]
         );
         if ($validator->fails()) {
@@ -86,7 +91,7 @@ class DashboardUsersController extends Controller
             }
         }
 
-        $user->update([
+        $dataToUpdate = [
             'name' => $request->name,
             'email' => $request->email,
             'username' => $request->username,
@@ -94,7 +99,15 @@ class DashboardUsersController extends Controller
             'birthdate' => $request->birthdate,
             'profile_photo_path' => $imagePath,
             // 'role' => $request->role,
-        ]);
+        ];
+
+        // Jika password kosong, jangan ubah password user.
+        if ($request->filled('password')) {
+            // Model cast `password` => 'hashed' akan meng-hash otomatis.
+            $dataToUpdate['password'] = $request->password;
+        }
+
+        $user->update($dataToUpdate);
 
         return redirect('/dashboard/users')->with('success', 'User berhasil diperbarui');
     }

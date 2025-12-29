@@ -41,6 +41,9 @@ class ProfileController extends Controller
                 'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'phone' => 'required|string|max:21',
+                'current_password' => 'nullable|required_with:password|current_password',
+                'password' => 'nullable|string|min:8',
+                'password_confirmation' => 'nullable|required_with:password|same:password',
             ],
             [
                 'name.required' => 'Nama lengkap wajib diisi.',
@@ -53,6 +56,11 @@ class ProfileController extends Controller
                 'photo.mimes' => 'Foto profil harus berformat jpeg, png, jpg, atau gif.',
                 'phone.max' => 'Nomor telepon maksimal 15 karakter.',
                 'phone.required' => 'Nomor telepon wajib diisi.',
+                'current_password.required_with' => 'Password lama wajib diisi untuk mengganti password.',
+                'current_password.current_password' => 'Password lama tidak sesuai.',
+                'password.min' => 'Password minimal 8 karakter.',
+                'password_confirmation.required_with' => 'Konfirmasi password wajib diisi.',
+                'password_confirmation.same' => 'Konfirmasi password tidak cocok.',
             ]
         );
         if ($validator->fails()) {
@@ -80,7 +88,7 @@ class ProfileController extends Controller
         }
 
         $profile = User::find(Auth::id());
-        $profile->update([
+        $dataToUpdate = [
             'name' => $request->name,
             'email' => $request->email,
             'username' => $request->username,
@@ -88,7 +96,15 @@ class ProfileController extends Controller
             'birthdate' => $request->birthdate,
             'profile_photo_path' => $imagePath,
             // 'role' => $request->role,
-        ]);
+        ];
+
+        // Jika password kosong, jangan ubah password user.
+        if ($request->filled('password')) {
+            // Model cast `password` => 'hashed' akan meng-hash otomatis.
+            $dataToUpdate['password'] = $request->password;
+        }
+
+        $profile->update($dataToUpdate);
         return redirect()->route('profile')->with('success', 'Profile updated successfully.');
     }
 }

@@ -59,7 +59,7 @@
                                 alt="Preview" />
 
                             <div id="hover-overlay"
-                                class="absolute inset-0 bg-black/40 hidden z-20 items-center justify-center transition opacity-0 hover:opacity-100 flex">
+                                class="absolute inset-0 bg-black/40 hidden z-20 items-center justify-center transition opacity-0 hover:opacity-100">
                                 <span class="text-white text-xs font-semibold bg-black/50 px-3 py-1 rounded-full">Ganti
                                     Foto</span>
                             </div>
@@ -100,6 +100,43 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password Baru</label>
+                        <input type="password" name="password" autocomplete="new-password"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition"
+                            placeholder="Kosongkan jika tidak ingin mengubah">
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika password tidak ingin diubah.</p>
+                        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" autocomplete="new-password"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm transition"
+                            placeholder="Ulangi password baru">
+                        <?php $__errorArgs = ['password_confirmation'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-600 text-sm mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
